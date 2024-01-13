@@ -1,29 +1,28 @@
 # AdofaiCSL
 
-Custom Song Loader for non-workshop levels
+Custom song loader for non-workshop levels.
 
 ## Instructions
 
-1. Open adofai once with the mod installed, this will create a folder called `CustomSongs` in the adofai base directory.
-2. Add your songs to the `CustomSongs` directory, the 2 allowed path are:
-    - `~\A Dance Of Fire And Ice\CustomSongs\<SONG_NAME>\main.adofai`
-    - `~\A Dance Of Fire And Ice\CustomSongs\<CATERGORY_NAME>\<SONG_NAME>\main.adofai`
-3. Go into the mod options by pressing `ctrl+f10` and click the icon with the 3 sliders next to the mod named `AdofaiCSL`.
-4. Click the `refresh` button, this will always be at the end of the list.
-5. If you installed the songs correctly they should show up as buttons, if not check if your paths match the 2 paths shown in step 2!
-6. To play as song, simply click on the corresponding button.
-7. Does stuff not load in? Go to the pause menu and click `Level Editor`, this should load in everything that was missing before.
+Open adofai once with the mod installed, this will create a folder called `CustomSongs` in the game directory.
 
-## Visual Instructions
+### Add level
 
-1. ![Step 1](https://i.imgur.com/QC08TW0.png)
-2. ![Step 2](https://i.imgur.com/kpTLRVh.png)
-3. ![Step 3](https://i.imgur.com/QP4nCpH.png)
-4. ![Step 4](https://i.imgur.com/MygH95I.png)
-5. ![Step 5](https://i.imgur.com/7s3sDel.png)
-6. ![Step 6](https://i.imgur.com/q5hwWHU.jpeg)
-7. ![Step 7](https://i.imgur.com/hwLhPTd.jpeg)
+1. Inside the `CustomSongs` folder, create a new folder, this will be the root of your level.
+2. Add your `.adofai` file and any other needed files to the folder (make sure the level file is called main.adofai)
+
+### Create pack
+
+1. Inside the `CustomSongs` folder, create a new folder, this will be the root of your pack.
+2. Inside the new folder, create a new file ending in `.pack`. The file name does not matter.
+3. Open the pack file in a text editor and paste in the [template](https://pastebin.com/raw/GRd0zAJk). The difficulty should be a number between 1 and 8, and the color should be a valid hex color code.
+4. Add an image and an icon by setting the properties in the pack file (optional). [Example](https://pastebin.com/raw/9GBX2TDB).
+5. Add a level by creating a new folder and adding the `.adofai` file and any other needed files in it (make sure the level file is called main.adofai)
 
 ## Help
 
-You can always DM on discord, `ThiJNmEnS#6669` or create a github issue.
+You can always DM on discord, `@ika7533` or create a github issue.
+
+## Credits
+
+Thanks to `@thijnmens` for allowing me to maintain the project.
