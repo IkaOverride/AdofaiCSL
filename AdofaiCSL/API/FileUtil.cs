@@ -10,47 +10,47 @@ namespace AdofaiCSL.API {
         /// <summary>
         /// Sort a directory as a song directory.
         /// </summary>
-        /// <param name="directoryPath">The path to the directory.</param>
-        public static void SortAsSongDirectory(string directoryPath) {
+        /// <param name="path">The path to the directory.</param>
+        public static void SortAsSongDirectory(string path) {
 
-            foreach (string topLevelPath in Directory.GetDirectories(directoryPath)) {
+            foreach (string levelPath in Directory.GetDirectories(path)) {
 
                 // If there's a pack file
-                if (Directory.GetFiles(topLevelPath, "*.pack").Length > 0) {
+                if (Directory.GetFiles(levelPath, "*.pack").Length > 0) {
 
-                    foreach (string levelPath in Directory.GetDirectories(topLevelPath)) {
+                    foreach (string sublevelPath in Directory.GetDirectories(levelPath)) {
 
-                        List<string> chartFilesPaths = Directory.GetFiles(levelPath, "*.adofai").ToList();
+                        List<string> charts = Directory.GetFiles(sublevelPath, "*.adofai").ToList();
 
-                        // Do not count the backup file
-                        chartFilesPaths.Remove(Path.Combine(levelPath, "backup.adofai"));
+                        // Ignore the backup file
+                        charts.Remove(Path.Combine(sublevelPath, "backup.adofai"));
 
                         // If there is only one file, rename it to "main.adofai"
-                        if (chartFilesPaths.Count == 1)
-                            File.Move(chartFilesPaths[0], Path.Combine(levelPath, "main.adofai"));
+                        if (charts.Count == 1)
+                            File.Move(charts[0], Path.Combine(sublevelPath, "main.adofai"));
 
                         // If main.adofai can't be found
-                        else if (!File.Exists(Path.Combine(levelPath, "main.adofai")))
-                            Main.ModEntry.Logger.Error($"\"main.adofai\" not found in \"{levelPath}\".");
+                        else if (!File.Exists(Path.Combine(sublevelPath, "main.adofai")))
+                            Main.ModEntry.Logger.Error($"\"main.adofai\" not found in \"{sublevelPath}\".");
                     }
                 } 
                 
                 else {
-                    List<string> chartFilesPaths = Directory.GetFiles(topLevelPath, "*.adofai").ToList();
+                    List<string> charts = Directory.GetFiles(levelPath, "*.adofai").ToList();
 
                     // If there's a song file
-                    if (chartFilesPaths.Count > 0) {
+                    if (charts.Count > 0) {
 
-                        // Do not count the backup file
-                        chartFilesPaths.Remove(Path.Combine(topLevelPath, "backup.adofai"));
+                        // Ignore the backup file
+                        charts.Remove(Path.Combine(levelPath, "backup.adofai"));
 
                         // If there is only one file, rename it to "main.adofai"
-                        if (chartFilesPaths.Count == 1)
-                            File.Move(chartFilesPaths[0], Path.Combine(topLevelPath, "main.adofai"));
+                        if (charts.Count == 1)
+                            File.Move(charts[0], Path.Combine(levelPath, "main.adofai"));
 
                         // If main.adofai can't be found
-                        else if (!File.Exists(Path.Combine(topLevelPath, "main.adofai")))
-                            Main.ModEntry.Logger.Critical($"Multiple .adofai files found in \"{topLevelPath}\". Please rename the correct file to \"main.adofai\"");
+                        else if (!File.Exists(Path.Combine(levelPath, "main.adofai")))
+                            Main.ModEntry.Logger.Critical($"Multiple .adofai files found in \"{levelPath}\". Please rename the correct file to \"main.adofai\"");
                     }
                 }
             }
@@ -68,9 +68,9 @@ namespace AdofaiCSL.API {
 
             foreach (string line in reader.ReadToEnd().Split('\n')) {
 
-                IEnumerable<string> lineData = line.Split(new string[] { " = " }, StringSplitOptions.None);
+                string[] lineData = line.Split(new string[] { " = " }, StringSplitOptions.None);
 
-                config.Add(lineData.ElementAt(0), lineData.ElementAt(1));
+                config.Add(lineData[0], lineData[1]);
             }
 
             return config;

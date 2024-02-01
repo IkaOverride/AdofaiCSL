@@ -11,46 +11,56 @@ namespace AdofaiCSL.API {
 
     public static class CLSExtensions {
 
+        public static GameObject SetupTileObject(this scnCLS screen, float y) {
+
+            // Instantiate the tile object
+            GameObject gameObject = Object.Instantiate(screen.tilePrefab, screen.floorContainer);
+            gameObject.name = "CustomTile";
+            gameObject.transform.LocalMoveY(y);
+
+            // Setup the floor
+            scrFloor floor = gameObject.GetComponent<scrFloor>();
+            floor.topGlow.gameObject.SetActive(true);
+            floor.isLandable = true;
+
+            return gameObject;
+        }
+
         /// <summary>
         /// Add a custom level to the custom level screen.
         /// </summary>
         /// <param name="screen">The <see cref="scnCLS"/>.</param>
         /// <param name="path">The path to the level.</param>
         /// <param name="y">The vertical offset of the level.</param>
-        public static void AddCustomLevel(this scnCLS screen, string path, float y) {
-            
-            // Add tile
-            GameObject levelObject = Object.Instantiate(screen.tilePrefab, screen.floorContainer);
-            levelObject.name = "CustomTile";
-            levelObject.transform.LocalMoveY(y);
+        public static void AddCustomLevel(this scnCLS screen, string path) {
 
-            scrFloor levelFloor = levelObject.GetComponent<scrFloor>();
-            levelFloor.topGlow.gameObject.SetActive(true);
-            levelFloor.isLandable = true;
+            // Setup object
+            GameObject gameObject = screen.SetupTileObject(screen.gemTopY);
 
-            // Add level
-            LevelDataCLS levelData = new LevelDataCLS();
-            levelData.Setup();
-            if (levelData.Decode(Json.DeserializePartially(RDFile.ReadAllText($"{path}{Path.DirectorySeparatorChar}main.adofai"), "actions") as Dictionary<string, object>))
-                screen.loadedLevels.Add(path.Split(Path.DirectorySeparatorChar).Last(), levelData);
+            // Setup data
+            LevelDataCLS data = new LevelDataCLS();
+            data.Setup();
+            if (data.Decode(Json.DeserializePartially(RDFile.ReadAllText($"{path}{Path.DirectorySeparatorChar}main.adofai"), "actions") as Dictionary<string, object>))
+                screen.loadedLevels.Add(path.Split(Path.DirectorySeparatorChar).Last(), data);
 
-            // Configure tile
-            CustomLevelTile levelTile = levelObject.GetComponent<CustomLevelTile>();
-            levelTile.levelKey = path.Split(Path.DirectorySeparatorChar).Last();
-            levelTile.title.text = Regex.Replace(levelData.title, @"<[^>]+>| ", "").Trim();
-            levelTile.artist.text = Regex.Replace(levelData.artist, @"<[^>]+>| ", "").Trim();
-            levelTile.image.enabled = levelData.previewIcon.Any();
+            // Setup tile
+            CustomLevelTile tile = gameObject.GetComponent<CustomLevelTile>();
+            tile.levelKey = path.Split(Path.DirectorySeparatorChar).Last();
+            tile.title.text = Regex.Replace(data.title, @"<[^>]+>| ", "").Trim();
+            tile.artist.text = Regex.Replace(data.artist, @"<[^>]+>| ", "").Trim();
+            tile.image.enabled = data.previewIcon.Any();
 
-            // Add song
-            ADOBase.audioManager.FindOrLoadAudioClipExternal(Path.Combine(path, levelData.songFilename), false);
+            // Load audio
+            ADOBase.audioManager.FindOrLoadAudioClipExternal(Path.Combine(path, data.songFilename), false);
 
-            screen.sortedLevelKeys.Add(levelTile.levelKey);
-            screen.loadedLevelTiles.Add(levelTile.levelKey, levelTile);
-            screen.loadedLevelDirs.Add(levelTile.levelKey, path);
+            // Load tile
+            screen.sortedLevelKeys.Add(tile.levelKey);
+            screen.loadedLevelTiles[tile.levelKey] = tile;
+            screen.loadedLevelDirs[tile.levelKey] = path;
+            screen.loadedLevelIsDeleted[tile.levelKey] = false;
 
-            // This fixes refresh issue :)
-            if (!screen.loadedLevelIsDeleted.ContainsKey(levelTile.levelKey))
-                screen.loadedLevelIsDeleted.Add(levelTile.levelKey, false);
+            // Move top gem
+            screen.gemTop.MoveY(++screen.gemTopY);
         }
 
         /// <summary>
@@ -59,42 +69,57 @@ namespace AdofaiCSL.API {
         /// <param name="screen">The <see cref="scnCLS"/>.</param>
         /// <param name="path">The path to the pack.</param>
         /// <param name="y">The vertical offset of the pack.</param>
-        public static void AddCustomPack(this scnCLS screen, string path, float y) {
+        public static void AddCustomPack(this scnCLS screen, string path) {
 
-            // Add tile
-            GameObject packObject = Object.Instantiate(screen.tilePrefab, screen.floorContainer);
-            packObject.name = "CustomTile";
-            packObject.transform.LocalMoveY(y);
+            // Setup object
+            GameObject gameObject = screen.SetupTileObject(screen.gemTopY);
 
-            scrFloor packFloor = packObject.GetComponent<scrFloor>();
-            packFloor.topGlow.gameObject.SetActive(true);
-            packFloor.isLandable = true;
-
-            // Configure tile
+            // Read pack config
             Dictionary<string, string> packConfig = FileUtil.ReadCustomConfig(Directory.GetFiles(path, "*.pack").First());
 
-            CustomLevelTile packTile = packObject.GetComponent<CustomLevelTile>();
-            packTile.levelKey = $"CustomFolder:{path.Split(Path.DirectorySeparatorChar).Last()}";
-            packTile.title.text = packConfig["title"];
-            packTile.artist.text = packConfig["artist"];
-            packTile.image.enabled = packConfig.ContainsKey("image");
+            string title = packConfig.ContainsKey("title") ? packConfig["title"] : "Unknown";
+            string artist = packConfig.ContainsKey("artist") ? packConfig["artist"] : "Unknown";
+            string author = packConfig.ContainsKey("author") ? packConfig["author"] : "Unknown";
+            string description = packConfig.ContainsKey("description") ? packConfig["description"] : "Unknown";
+            string image = (packConfig.ContainsKey("image") && File.Exists($"{path}{Path.DirectorySeparatorChar}{packConfig["image"]}")) ? packConfig["image"].Trim() : "";
+            string icon = (packConfig.ContainsKey("icon") && File.Exists($"{path}{Path.DirectorySeparatorChar}{packConfig["icon"]}")) ? packConfig["icon"].Trim() : "";
+            Color color = packConfig.ContainsKey("color") ? packConfig["color"].HexToColor() : Color.black;
 
-            string image = packConfig.ContainsKey("image") ? packConfig["image"] : "";
-            string icon = packConfig.ContainsKey("icon") ? packConfig["icon"] : "";
+            if (!packConfig.ContainsKey("difficulty") || !int.TryParse(packConfig["difficulty"], out int difficulty))
+                difficulty = 1;
 
+            // Setup data
             FolderDataCLS packData = new FolderDataCLS(
-                packConfig["title"],
-                int.Parse(packConfig["difficulty"]),
-                packConfig["artist"],
-                packConfig["author"],
-                packConfig["description"],
+                title,
+                difficulty,
+                artist,
+                author,
+                description,
                 image,
                 icon,
-                packConfig["color"].HexToColor()
+                color
             );
 
-            foreach (string levelPath in Directory.GetDirectories(path))
-                screen.AddCustomLevelToPack(packData, levelPath);
+            // Setup tile
+            CustomLevelTile tile = gameObject.GetComponent<CustomLevelTile>();
+            tile.levelKey = $"CustomFolder:{path.Split(Path.DirectorySeparatorChar).Last()}";
+            tile.title.text = packConfig.ContainsKey("title") ? packConfig["title"] : "Unknown";
+            tile.artist.text = packConfig.ContainsKey("artist") ? packConfig["artist"] : "Unknown";
+            tile.image.enabled = packConfig.ContainsKey("image");
+
+            // Add levels in pack
+            foreach (string levelPath in Directory.GetDirectories(path).Where(levelPath => Directory.GetFiles(levelPath, "main.adofai").Length > 0))
+                screen.AddCustomLevelToPack(levelPath, tile.levelKey, packData);
+
+            // Load tile
+            screen.sortedLevelKeys.Add(tile.levelKey);
+            screen.loadedLevels[tile.levelKey] = packData;
+            screen.loadedLevelTiles[tile.levelKey] = tile;
+            screen.loadedLevelDirs[tile.levelKey] = path;
+            screen.loadedLevelIsDeleted[tile.levelKey] = false;
+
+            // Move top gem
+            screen.gemTop.MoveY(++screen.gemTopY);
         }
 
         /// <summary>
@@ -103,41 +128,32 @@ namespace AdofaiCSL.API {
         /// <param name="screen">The <see cref="scnCLS"/>.</param>
         /// <param name="packData">The <see cref="FolderDataCLS"/>.</param>
         /// <param name="path">The path to the level.</param>
-        public static void AddCustomLevelToPack(this scnCLS screen, FolderDataCLS packData, string path) {
+        public static void AddCustomLevelToPack(this scnCLS screen, string path, string packKey, FolderDataCLS packData) {
 
-            // Add tile
-            GameObject levelObject = Object.Instantiate(screen.tilePrefab, screen.floorContainer);
-            levelObject.name = "CustomTile";
-            levelObject.transform.LocalMoveY(int.MaxValue); // move far from screen
+            // Setup object
+            GameObject gameObject = screen.SetupTileObject(int.MaxValue);
 
-            scrFloor levelFloor = levelObject.GetComponent<scrFloor>();
-            levelFloor.GetComponent<scrFloor>().topGlow.gameObject.SetActive(true);
-            levelFloor.GetComponent<scrFloor>().isLandable = true;
-
-            // Add level
-            LevelDataCLS levelData = new LevelDataCLS();
-            levelData.Setup();
-            if (levelData.Decode(Json.DeserializePartially(RDFile.ReadAllText($"{path}{Path.DirectorySeparatorChar}main.adofai"), "actions") as Dictionary<string, object>)) {
-                levelData.parentFolderName = (string) packData["title"];
-                screen.loadedLevels.Add(path.Split(Path.DirectorySeparatorChar).Last(), levelData);
+            // Setup data
+            LevelDataCLS data = new LevelDataCLS();
+            data.Setup();
+            if (data.Decode(Json.DeserializePartially(RDFile.ReadAllText($"{path}{Path.DirectorySeparatorChar}main.adofai"), "actions") as Dictionary<string, object>)) {
+                data.parentFolderName = packKey;
+                screen.loadedLevels.Add(path.Split(Path.DirectorySeparatorChar).Last(), data);
             }
 
-            // Configure tile
-            CustomLevelTile levelTile = levelObject.GetComponent<CustomLevelTile>();
-            levelTile.levelKey = path.Split(Path.DirectorySeparatorChar).Last();
-            levelTile.title.text = Regex.Replace(levelData.title, @"<[^>]+>| ", "").Trim();
-            levelTile.artist.text = Regex.Replace(levelData.artist, @"<[^>]+>| ", "").Trim();
-            levelTile.image.enabled = levelData.previewIcon.Any();
+            // Setup tile
+            CustomLevelTile tile = gameObject.GetComponent<CustomLevelTile>();
+            tile.levelKey = path.Split(Path.DirectorySeparatorChar).Last();
+            tile.title.text = Regex.Replace(data.title, @"<[^>]+>| ", "").Trim();
+            tile.artist.text = Regex.Replace(data.artist, @"<[^>]+>| ", "").Trim();
+            tile.image.enabled = data.previewIcon.Any();
 
-            packData.containingLevels.Add(levelTile.levelKey, levelData);
-
-            screen.sortedLevelKeys.Add(levelTile.levelKey);
-            screen.loadedLevelTiles.Add(levelTile.levelKey, levelTile);
-            screen.loadedLevelDirs.Add(levelTile.levelKey, path);
-
-            // This fixes refresh issue :)
-            if (!screen.loadedLevelIsDeleted.ContainsKey(levelTile.levelKey))
-                screen.loadedLevelIsDeleted.Add(levelTile.levelKey, false);
+            // Load tile
+            packData.containingLevels[tile.levelKey] = data;
+            screen.sortedLevelKeys.Add(tile.levelKey);
+            screen.loadedLevelTiles[tile.levelKey] = tile;
+            screen.loadedLevelDirs[tile.levelKey] = path;
+            screen.loadedLevelIsDeleted[tile.levelKey] = false;
         }
     }
 }
