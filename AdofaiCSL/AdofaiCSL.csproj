@@ -50,13 +50,30 @@
     <Reference Include="dnlib" HintPath="$(ADOFAI_REFERENCES)\dnlib.dll" />
     <Reference Include="RDTools" HintPath="$(ADOFAI_REFERENCES)\RDTools.dll" />
     <Reference Include="UnityModManager" HintPath="$(ADOFAI_REFERENCES)\UnityModManager.dll" />
+    <Reference Include="DOTween" HintPath="$(ADOFAI_REFERENCES)\DOTween.dll" />
+    <Reference Include="UnityEngine.TextRenderingModule" HintPath="$(ADOFAI_REFERENCES)\UnityEngine.TextRenderingModule.dll" />
+    <Reference Include="com.rlabrecque.steamworks.net" HintPath="$(ADOFAI_REFERENCES)\com.rlabrecque.steamworks.net.dll" />
+    <Reference Include="Unity.TextMeshPro" HintPath="$(ADOFAI_REFERENCES)\Unity.TextMeshPro.dll" />
+    <Reference Include="UnityEngine.UIModule" HintPath="$(ADOFAI_REFERENCES)\UnityEngine.UIModule.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\CLSExtensions.cs" />
+    <Compile Include="API\Extensions\LevelDataCLSExtensions.cs" />
+    <Compile Include="API\Extensions\CustomLevelTileExtensions.cs" />
+    <Compile Include="API\Extensions\scnCLSExtensions.cs" />
+    <Compile Include="API\Features\SongsDirectory.cs" />
+    <Compile Include="ModGUI.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Patches\CreateFloorsPatch.cs" />
-    <Compile Include="API\FileUtil.cs" />
+    <Compile Include="Patches\CustomSongs.cs" />
+    <Compile Include="API\Features\CustomConfig.cs" />
+    <Compile Include="Patches\LockNonEmptyPack.cs" />
+    <Compile Include="Patches\LockEmptyFolder.cs" />
+    <Compile Include="Patches\CustomFolderExit.cs" />
+    <Compile Include="Patches\CurrentTileTracker.cs" />
+    <Compile Include="Patches\CustomRefresh.cs" />
+    <Compile Include="Patches\EntranceTileFix.cs" />
+    <Compile Include="Patches\NullChecks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

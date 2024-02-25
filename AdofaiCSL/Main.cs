@@ -10,7 +10,7 @@ namespace AdofaiCSL {
         /// <summary>
         /// The path to the custom songs.
         /// </summary>
-        public static string SongsDirectory = $@"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}CustomSongs";
+        public static string SongsDirectory = Path.Combine(AppContext.BaseDirectory, "CustomSongs");
 
         /// <summary>
         /// The mod entry.
@@ -36,6 +36,8 @@ namespace AdofaiCSL {
                 modEntry.Logger.Log($"Creating directory: '{SongsDirectory}'");
                 Directory.CreateDirectory(SongsDirectory);
             }
+
+            modEntry.OnGUI += ModGUI.Check;
         }
     }
 }
