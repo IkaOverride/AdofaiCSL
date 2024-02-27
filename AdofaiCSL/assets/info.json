@@ -1,0 +1,8 @@
+{
+	"Id": "AdofaiCSL",
+	"Author": "@ika7533 (originally by @thijnmens)",
+	"DisplayName": "AdofaiCSL",
+	"Version": "3.0.0",
+	"EntryMethod": "AdofaiCSL.Main.Load",
+	"Repository": "https://bot.adofai.gg/api/mods/AdofaiCSL/Repository.json"
+}

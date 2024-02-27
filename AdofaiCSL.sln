@@ -7,14 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdofaiCSL", "AdofaiCSL\Adof
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Testing|Any CPU = Testing|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{28AB5167-3ADB-4236-B31A-6316EDD3D78E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28AB5167-3ADB-4236-B31A-6316EDD3D78E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28AB5167-3ADB-4236-B31A-6316EDD3D78E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28AB5167-3ADB-4236-B31A-6316EDD3D78E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28AB5167-3ADB-4236-B31A-6316EDD3D78E}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
+		{28AB5167-3ADB-4236-B31A-6316EDD3D78E}.Testing|Any CPU.Build.0 = Testing|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
