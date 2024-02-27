@@ -22,7 +22,7 @@ The GUI allows you to:
 - Open custom songs directories.
 
 ![GUI image](./assets/menu.png)
-![Pack editor image](./assetgs/editor.png)
+![Pack editor image](./assets/editor.png)
 
 ## Instructions
 
