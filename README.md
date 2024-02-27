@@ -8,7 +8,7 @@ Custom song loader for non-workshop levels.
 - Allows pack loading.
 - GUI to help manage custom songs.
 
-![Example gif](./assets/example.gif)
+![Example gif](./images/example.gif)
 
 ## In-game options (GUI)
 
@@ -21,8 +21,8 @@ The GUI allows you to:
 - Edit packs.
 - Open custom songs directories.
 
-![GUI image](./assets/menu.png)
-![Pack editor image](./assets/editor.png)
+![GUI image](./images/menu.png)
+![Pack editor image](./images/editor.png)
 
 ## Instructions
 
