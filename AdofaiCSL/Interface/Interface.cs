@@ -416,10 +416,8 @@ namespace AdofaiCSL.Interface
             if (cancel)
                 editingPack = null;
 
-            if (save) {
-
-                editingPack = null;
-
+            if (save) 
+            {
                 string packConfigPath = Path.Combine(packPath, "main.pack");
 
                 CustomConfig.Write(packConfigPath, new Dictionary<string, string>() {
@@ -432,6 +430,8 @@ namespace AdofaiCSL.Interface
                     { "icon", editingPack.IconRelativePath },
                     { "color", editingPack.IconColor },
                 });
+
+                editingPack = null;
 
                 DOVirtual.DelayedCall(0f, () => screen.Refresh());
             }

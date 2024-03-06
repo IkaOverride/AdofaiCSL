@@ -12,7 +12,6 @@ namespace AdofaiCSL.Patches
     {
         private static bool Prefix(scnCLS __instance)
         {
-
             if (scnCLS.featuredLevelsMode || __instance.loadedLevels.Values.Where(level => level.parentFolderName == __instance.levelToSelect).Count() > 0)
                 return true;
             

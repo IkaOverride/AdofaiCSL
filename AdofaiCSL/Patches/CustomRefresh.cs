@@ -29,9 +29,7 @@ namespace AdofaiCSL.Patches
             __instance.lastSongsLoaded = [];
             __instance.lastTexturesLoaded = [];
 
-            if (__instance.loadedLevelTiles != null || __instance.loadedLevelTiles.Count > 0)
-                foreach (GameObject gameObject in __instance.loadedLevelTiles.Values.Select(tile => tile.gameObject))
-                    Object.Destroy(gameObject);
+            __instance.loadedLevelTiles?.Values.Select(tile => tile.gameObject).Do(Object.Destroy);
 
             __instance.newlyInstalledLevelKeys = [];
             __instance.sortedLevelKeys = [];
@@ -40,7 +38,7 @@ namespace AdofaiCSL.Patches
             __instance.loadedLevelDirs = [];
 
             __instance.CreateFloors();
-            __instance.levelCount = __instance.loadedLevelTiles.Count;
+            __instance.levelCount = __instance.loadedLevels.Count;
 
             if (__instance.levelCount > 0)
             {
