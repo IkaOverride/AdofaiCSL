@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace AdofaiCSL.API.Features
 {
@@ -24,10 +25,9 @@ namespace AdofaiCSL.API.Features
 
                 foreach (string line in reader.ReadToEnd().Split('\n'))
                 {
+                    string[] lineData = Regex.Split(line, @"\s*=\s*");
 
-                    string[] lineData = line.Split(new string[] { " = " }, StringSplitOptions.None);
-
-                    config.Add(lineData[0].Trim(), lineData.Length == 1 ? null : lineData[1].Trim());
+                    config.Add(lineData[0], lineData.Length == 1 ? null : lineData[1]);
                 }
 
                 reader.Close();
@@ -79,14 +79,14 @@ namespace AdofaiCSL.API.Features
             return packConfig is null ?
                 null :
                 new FolderDataCLS(
-                    packConfig.TryGetValue("title", out string title) ? title : "",
-                    (packConfig.TryGetValue("difficulty", out string difficultyValue) && int.TryParse(difficultyValue, out int difficulty)) ? difficulty : 1,
-                    packConfig.TryGetValue("artist", out string artist) ? artist : "",
-                    packConfig.TryGetValue("author", out string author) ? author : "",
-                    packConfig.TryGetValue("description", out string description) ? description : "",
+                    packConfig.TryGetValue("title", out string title) ? title.Trim() : "",
+                    (packConfig.TryGetValue("difficulty", out string difficultyValue) && int.TryParse(difficultyValue.Trim(), out int difficulty)) ? difficulty : 1,
+                    packConfig.TryGetValue("artist", out string artist) ? artist.Trim() : "",
+                    packConfig.TryGetValue("author", out string author) ? author.Trim() : "",
+                    packConfig.TryGetValue("description", out string description) ? description.Trim() : "",
                     packConfig.ContainsKey("image") ? packConfig["image"].Trim() : "",
                     packConfig.ContainsKey("icon") ? packConfig["icon"].Trim() : "",
-                    packConfig.ContainsKey("color") ? packConfig["color"].HexToColor() : default
+                    packConfig.ContainsKey("color") ? packConfig["color"].Trim().HexToColor() : default
                 );
         }
     }

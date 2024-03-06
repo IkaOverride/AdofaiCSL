@@ -366,42 +366,42 @@ namespace AdofaiCSL.Interface
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Title:", GUILayout.ExpandWidth(false));
-            editingPack.Title = GUILayout.TextField(editingPack.Title);
+            editingPack.Title = GUILayout.TextField(editingPack.Title, GUILayout.Height(21));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Author:", GUILayout.ExpandWidth(false));
-            editingPack.Author = GUILayout.TextField(editingPack.Author);
+            editingPack.Author = GUILayout.TextField(editingPack.Author, GUILayout.Height(21));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Artist:", GUILayout.ExpandWidth(false));
-            editingPack.Artist = GUILayout.TextField(editingPack.Artist);
+            editingPack.Artist = GUILayout.TextField(editingPack.Artist, GUILayout.Height(21));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Difficulty:", GUILayout.ExpandWidth(false));
-            editingPack.Difficulty = GUILayout.TextField(editingPack.Difficulty);
+            editingPack.Difficulty = GUILayout.TextField(editingPack.Difficulty, GUILayout.Height(21));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Description:", GUILayout.ExpandWidth(false));
-            editingPack.Description = GUILayout.TextField(editingPack.Description);
+            editingPack.Description = GUILayout.TextField(editingPack.Description, GUILayout.Height(21));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Image relative path:", GUILayout.ExpandWidth(false));
-            editingPack.ImageRelativePath = GUILayout.TextField(editingPack.ImageRelativePath);
+            editingPack.ImageRelativePath = GUILayout.TextField(editingPack.ImageRelativePath, GUILayout.Height(21));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Icon relative path:", GUILayout.ExpandWidth(false));
-            editingPack.IconRelativePath = GUILayout.TextField(editingPack.IconRelativePath);
+            editingPack.IconRelativePath = GUILayout.TextField(editingPack.IconRelativePath, GUILayout.Height(21));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Icon color:", GUILayout.ExpandWidth(false));
-            editingPack.IconColor = GUILayout.TextField(editingPack.IconColor);
+            editingPack.IconColor = GUILayout.TextField(editingPack.IconColor, GUILayout.Height(21));
             GUILayout.EndHorizontal();
 
             GUILayout.Space(0.5f);
