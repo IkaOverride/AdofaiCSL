@@ -4,18 +4,18 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace AdofaiCSL.API.Features {
-
-    public static class SongsDirectory {
-
+namespace AdofaiCSL.API.Features
+{
+    public static class SongsDirectory
+    {
         /// <summary>
         /// Sort a directory as a songs directory.
         /// </summary>
         /// <param name="path">The path to the directory.</param>
-        public static void SortAsSongsDirectory(this string path) {
-
-            foreach (string directory in Directory.GetDirectories(path)) {
-
+        public static void SortAsSongsDirectory(this string path)
+        {
+            foreach (string directory in Directory.GetDirectories(path))
+            {
                 // Sort pack
                 if (Directory.GetFiles(directory, "*.pack").Length > 0)
                     directory.SortAsPackDirectory();
@@ -30,9 +30,10 @@ namespace AdofaiCSL.API.Features {
         /// Sort a directory as a level directory.
         /// </summary>
         /// <param name="path">The path to the directory.</param>
-        public static void SortAsLevelDirectory(this string path) {
+        public static void SortAsLevelDirectory(this string path)
+        {
 
-            List<string> charts = Directory.GetFiles(path, "*.adofai").ToList();
+            List<string> charts = [.. Directory.GetFiles(path, "*.adofai")];
 
             // Ignore the backup file
             charts.Remove(Path.Combine(path, "backup.adofai"));
@@ -50,11 +51,13 @@ namespace AdofaiCSL.API.Features {
         /// Sort a directory as a pack directory.
         /// </summary>
         /// <param name="path">The path to the directory.</param>
-        public static void SortAsPackDirectory(this string path) {
+        public static void SortAsPackDirectory(this string path)
+        {
 
-            foreach (string directory in Directory.GetDirectories(path)) {
+            foreach (string directory in Directory.GetDirectories(path))
+            {
 
-                List<string> configs = Directory.GetFiles(path, "*.pack").ToList();
+                List<string> configs = [.. Directory.GetFiles(path, "*.pack")];
 
                 // If there is only one file, rename it to "main.adofai"
                 if (configs.Count == 1)
@@ -74,9 +77,10 @@ namespace AdofaiCSL.API.Features {
             }
         }
 
-        public static string GetUniqueDirectoryPath(this string path) {
+        public static string GetUniqueDirectoryPath(this string path)
+        {
             
-            if (!Directory.Exists(path)) 
+            if (!Directory.Exists(path))
                 return path;
 
             path = Regex.Replace(path, @" \(\d+\)$", string.Empty);
@@ -88,18 +92,20 @@ namespace AdofaiCSL.API.Features {
             return $"{path} ({i})";
         }
 
-        public static void CreatePack(this string path) {
+        public static void CreatePack(this string path)
+        {
             string configPath = Path.Combine(path, "main.pack");
-            Dictionary<string, string> newPackConfig = new Dictionary<string, string>() {
-                    { "title", "Pack" },
-                    { "author", "AdofaiCSL" },
-                    { "artist", "AdofaiCSL" },
-                    { "difficulty", "1" },
-                    { "description", string.Empty },
-                    { "image", string.Empty },
-                    { "icon", string.Empty },
-                    { "color", default(Color).ToHex() }
-                };
+            Dictionary<string, string> newPackConfig = new()
+            {
+                { "title", "Pack" },
+                { "author", "AdofaiCSL" },
+                { "artist", "AdofaiCSL" },
+                { "difficulty", "1" },
+                { "description", string.Empty },
+                { "image", string.Empty },
+                { "icon", string.Empty },
+                { "color", default(Color).ToHex() }
+            };
 
             Directory.CreateDirectory(path);
             File.Create(configPath).Close();

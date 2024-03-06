@@ -2,11 +2,11 @@
 using HarmonyLib;
 using UnityEngine;
 
-namespace AdofaiCSL.Patches {
-
+namespace AdofaiCSL.Patches
+{
     [HarmonyPatch(typeof(scnCLS), nameof(scnCLS.SelectLevel))]
-    internal static class SelectLevelNullCheck {
-
+    internal static class SelectLevelNullCheck
+    {
         /// <summary>
         /// Do not process the select level if the tile is null.
         /// </summary>
@@ -14,8 +14,8 @@ namespace AdofaiCSL.Patches {
     }
 
     [HarmonyPatch(typeof(DOTweenModuleSprite), nameof(DOTweenModuleSprite.DOFade))]
-    internal static class DOFadeSpriteNullCheck {
-
+    internal static class DOFadeSpriteNullCheck
+    {
         /// <summary>
         /// Do not process if the sprite renderer is null.
         /// </summary>
@@ -23,8 +23,8 @@ namespace AdofaiCSL.Patches {
     }
 
     [HarmonyPatch(typeof(DOTweenModuleSprite), nameof(DOTweenModuleSprite.DOColor))]
-    internal static class DOColorSpriteNullCheck {
-
+    internal static class DOColorSpriteNullCheck
+    {
         /// <summary>
         /// Do not process if the sprite renderer or the color is null.
         /// </summary>

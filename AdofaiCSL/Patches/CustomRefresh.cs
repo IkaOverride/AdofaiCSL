@@ -1,19 +1,17 @@
-﻿using ADOFAI;
-using DG.Tweening;
+﻿using DG.Tweening;
 using HarmonyLib;
 using Steamworks;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace AdofaiCSL.Patches {
-
+namespace AdofaiCSL.Patches
+{
     [HarmonyPatch(typeof(scnCLS), nameof(scnCLS.Refresh))]
-    internal static class CustomRefresh {
-
-        private static bool Prefix(scnCLS __instance) {
-
+    internal static class CustomRefresh
+    {
+        private static bool Prefix(scnCLS __instance)
+        {
             __instance.errorCanvas.gameObject.SetActive(false);
             __instance.chainBottom.gameObject.SetActive(false);
             __instance.chainTop.gameObject.SetActive(false);
@@ -28,23 +26,24 @@ namespace AdofaiCSL.Patches {
             __instance.loadingText.gameObject.SetActive(true);
 
             __instance.levelToSelect = null;
-            __instance.lastSongsLoaded = new List<string>();
-            __instance.lastTexturesLoaded = new List<string>();
+            __instance.lastSongsLoaded = [];
+            __instance.lastTexturesLoaded = [];
 
             if (__instance.loadedLevelTiles != null || __instance.loadedLevelTiles.Count > 0)
                 foreach (GameObject gameObject in __instance.loadedLevelTiles.Values.Select(tile => tile.gameObject))
                     Object.Destroy(gameObject);
 
-            __instance.newlyInstalledLevelKeys = new List<string>();
-            __instance.sortedLevelKeys = new List<string>();
-            __instance.loadedLevels = new Dictionary<string, GenericDataCLS>();
-            __instance.loadedLevelTiles = new Dictionary<string, CustomLevelTile>();
-            __instance.loadedLevelDirs = new Dictionary<string, string>();
+            __instance.newlyInstalledLevelKeys = [];
+            __instance.sortedLevelKeys = [];
+            __instance.loadedLevels = [];
+            __instance.loadedLevelTiles = [];
+            __instance.loadedLevelDirs = [];
 
             __instance.CreateFloors();
             __instance.levelCount = __instance.loadedLevelTiles.Count;
 
-            if (__instance.levelCount > 0) {
+            if (__instance.levelCount > 0)
+            {
                 __instance.DisableCLS(false);
                 __instance.DisablePlanets(false);
             }

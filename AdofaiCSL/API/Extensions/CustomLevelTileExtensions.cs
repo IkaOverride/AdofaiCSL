@@ -2,9 +2,10 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AdofaiCSL.API.Extensions {
-    public static class CustomLevelTileExtensions {
-
+namespace AdofaiCSL.API.Extensions
+{
+    public static class CustomLevelTileExtensions
+    {
         public const string NoTagsRegex = @"<[^>]+>";
 
         /// <summary>
@@ -13,7 +14,8 @@ namespace AdofaiCSL.API.Extensions {
         /// <param name="tile">The <see cref="CustomLevelTile"/>.</param>
         /// <param name="key">The level's key.</param>
         /// <param name="data">The <see cref="LevelDataCLS"/>.</param>
-        public static void Setup(this CustomLevelTile tile, string key, LevelDataCLS data) {
+        public static void Setup(this CustomLevelTile tile, string key, LevelDataCLS data)
+        {
             tile.levelKey = key;
             tile.title.text = Regex.Replace(data.title, NoTagsRegex, "").Trim();
             tile.artist.text = Regex.Replace(data.artist, NoTagsRegex, "").Trim();
@@ -26,7 +28,8 @@ namespace AdofaiCSL.API.Extensions {
         /// <param name="tile">The <see cref="CustomLevelTile"/>.</param>
         /// <param name="key">The pack's key.</param>
         /// <param name="data">The <see cref="FolderDataCLS"/>.</param>
-        public static void Setup(this CustomLevelTile tile, string key, FolderDataCLS data) {
+        public static void Setup(this CustomLevelTile tile, string key, FolderDataCLS data)
+        {
             tile.levelKey = key;
             tile.title.text = data.title;
             tile.artist.text = data.artist;

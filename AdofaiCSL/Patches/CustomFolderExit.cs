@@ -3,16 +3,16 @@ using HarmonyLib;
 using System.IO;
 using System.Linq;
 
-namespace AdofaiCSL.Patches {
-
+namespace AdofaiCSL.Patches
+{
     [HarmonyPatch(typeof(scnCLS), nameof(scnCLS.ExitFolder))]
-    internal static class CustomFolderExit {
-
+    internal static class CustomFolderExit
+    {
         /// <summary>
         /// Exit folder for subfolders / nested folders and refresh to fix icons after exiting a level.
         /// </summary>
-        private static bool Prefix(scnCLS __instance) {
-
+        private static bool Prefix(scnCLS __instance)
+        {
             if (scnCLS.featuredLevelsMode)
                 return true;
 

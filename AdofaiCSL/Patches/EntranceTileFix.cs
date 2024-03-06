@@ -1,23 +1,22 @@
-﻿using ADOFAI;
-using AdofaiCSL.API.Extensions;
+﻿using AdofaiCSL.API.Extensions;
 using HarmonyLib;
 using System.Linq;
 using UnityEngine;
 
-namespace AdofaiCSL.Patches {
-
+namespace AdofaiCSL.Patches
+{
     [HarmonyPatch(typeof(EntranceTile), nameof(EntranceTile.LateUpdate))]
-    internal static class EntranceTileFix {
-
-        private static bool Prefix(EntranceTile __instance) {
-
+    internal static class EntranceTileFix
+    {
+        private static bool Prefix(EntranceTile __instance)
+        {
             scnCLS screen = scnCLS.instance;
             float y = ADOBase.controller.camy.pos.y;
 
-            if (screen.levelCount >= screen.levelCountForLoop) {
-                
-                if (screen.IsKeyValid(screen.currentFolderName)) {
-
+            if (screen.levelCount >= screen.levelCountForLoop)
+            {    
+                if (screen.IsKeyValid(screen.currentFolderName))
+                {
                     float topPos = screen.gemExitFolder.position.y;
                     int packLevelCount = screen.loadedLevels.Values.Where(level => level.parentFolderName == screen.currentFolderName).Count();
 

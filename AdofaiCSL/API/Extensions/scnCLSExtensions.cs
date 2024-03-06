@@ -7,9 +7,10 @@ using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace AdofaiCSL.API.Extensions {
-    public static class scnCLSExtensions {
-
+namespace AdofaiCSL.API.Extensions
+{
+    public static class scnCLSExtensions
+    {
         /// <summary>
         /// Check if a key is a valid level key.
         /// </summary>
@@ -26,8 +27,8 @@ namespace AdofaiCSL.API.Extensions {
         /// <param name="screen">The <see cref="scnCLS"/>.</param>
         /// <param name="y">The vertical offset of the tile.</param>
         /// <returns>The tile's <see cref="GameObject"/>.</returns>
-        public static GameObject CreateTile(this scnCLS screen, float y) {
-
+        public static GameObject CreateTile(this scnCLS screen, float y)
+        {
             // Instantiate the tile object
             GameObject gameObject = Object.Instantiate(screen.tilePrefab, screen.floorContainer);
             gameObject.transform.LocalMoveY(y);
@@ -47,7 +48,8 @@ namespace AdofaiCSL.API.Extensions {
         /// <param name="path">The path to the level.</param>
         /// <param name="tile">The <see cref="CustomLevelTile"/>.</param>
         /// <param name="data">The tile's <see cref="GenericDataCLS"/>.</param>
-        public static void LoadTile(this scnCLS screen, string path, CustomLevelTile tile, GenericDataCLS data) {
+        public static void LoadTile(this scnCLS screen, string path, CustomLevelTile tile, GenericDataCLS data)
+        {
             screen.sortedLevelKeys.Add(tile.levelKey);
             screen.loadedLevels[tile.levelKey] = data;
             screen.loadedLevelTiles[tile.levelKey] = tile;
@@ -61,12 +63,12 @@ namespace AdofaiCSL.API.Extensions {
         /// </summary>
         /// <param name="screen">The <see cref="scnCLS"/>.</param>
         /// <param name="path">The path to the songs directory.</param>
-        public static void AddLevels(this scnCLS screen, string path) {
-
-            foreach (string directory in Directory.GetDirectories(path)) {
-
-                try {
-
+        public static void AddLevels(this scnCLS screen, string path)
+        {
+            foreach (string directory in Directory.GetDirectories(path))
+            {
+                try
+                {
                     // Add pack
                     if (Directory.GetFiles(directory, "main.pack").Length > 0)
                         screen.AddPack(directory);
@@ -74,10 +76,10 @@ namespace AdofaiCSL.API.Extensions {
                     // Add level
                     else if (Directory.GetFiles(directory, "main.adofai").Length > 0)
                         screen.AddLevel(directory);
-
                 }
 
-                catch (Exception e) {
+                catch (Exception e)
+                {
                     Main.ModEntry.Logger.Error($"Could not load the level or pack at '{directory}'. Error: '{e.GetType().Name} - {e.Message}\n{e.StackTrace}'");
                 }
             }
@@ -88,8 +90,8 @@ namespace AdofaiCSL.API.Extensions {
         /// </summary>
         /// <param name="screen">The <see cref="scnCLS"/>.</param>
         /// <param name="path">The path to the level.</param>
-        public static void AddLevel(this scnCLS screen, string path) {
-
+        public static void AddLevel(this scnCLS screen, string path)
+        {
             // Setup object
             GameObject gameObject = screen.CreateTile(screen.gemTopY);
 
@@ -116,8 +118,8 @@ namespace AdofaiCSL.API.Extensions {
         /// </summary>
         /// <param name="screen">The <see cref="scnCLS"/>.</param>
         /// <param name="path">The path to the pack.</param>
-        public static void AddPack(this scnCLS screen, string path) {
-
+        public static void AddPack(this scnCLS screen, string path)
+        {
             // Setup object
             GameObject gameObject = screen.CreateTile(screen.gemTopY);
 
@@ -127,18 +129,18 @@ namespace AdofaiCSL.API.Extensions {
                 return;
 
             // Setup data
-            FolderDataCLS data = packConfig.AsPackData(path);
+            FolderDataCLS data = packConfig.AsPackData();
 
             // Setup tile
             CustomLevelTile tile = gameObject.GetComponent<CustomLevelTile>();
             tile.Setup("Custom:" + path.Split(Path.DirectorySeparatorChar).Last(), data);
 
             // Add levels and packs
-            foreach (string directory in Directory.GetDirectories(path)) {
-
+            foreach (string directory in Directory.GetDirectories(path))
+            {
                 // Add child pack
                 if (Directory.GetFiles(directory, "main.pack").Length > 0)
-                    screen.AddChildPack(directory, tile.levelKey, data);
+                    screen.AddChildPack(directory, tile.levelKey);
 
                 // Add child directory
                 else if (Directory.GetFiles(directory, "main.adofai").Length > 0)
@@ -162,8 +164,8 @@ namespace AdofaiCSL.API.Extensions {
         /// <param name="packKey">The parent pack's key.</param>
         /// <param name="packData">The <see cref="FolderDataCLS"/>.</param>
         /// <param name="depth">The depth of the child level. E.g. if the level is in a pack which is in another pack (two packs deep), the depth would be 2.</param>
-        public static void AddChildLevel(this scnCLS screen, string path, string packKey, FolderDataCLS packData, int depth = 1) {
-
+        public static void AddChildLevel(this scnCLS screen, string path, string packKey, FolderDataCLS packData, int depth = 1)
+        {
             if (depth < 1)
                 depth = 1;
 
@@ -171,7 +173,7 @@ namespace AdofaiCSL.API.Extensions {
             GameObject gameObject = screen.CreateTile(int.MaxValue);
 
             // Setup data or return if it can't
-            LevelDataCLS data = new LevelDataCLS();
+            LevelDataCLS data = new();
             if (!data.TrySetup(path))
                 return;
 
@@ -196,8 +198,8 @@ namespace AdofaiCSL.API.Extensions {
         /// <param name="path">The path to the level.</param>
         /// <param name="packKey">The parent pack's key.</param>
         /// <param name="depth">The depth of the child level. E.g. if the level is in a pack which is in another pack (two packs deep), the depth would be 2.</param>
-        public static void AddChildPack(this scnCLS screen, string path, string packKey, FolderDataCLS packData, int depth = 1) {
-
+        public static void AddChildPack(this scnCLS screen, string path, string packKey, int depth = 1)
+        {
             if (depth < 1)
                 depth = 1;
 
@@ -210,7 +212,7 @@ namespace AdofaiCSL.API.Extensions {
                 return;
 
             // Setup data
-            FolderDataCLS data = packConfig.AsPackData(path);
+            FolderDataCLS data = packConfig.AsPackData();
             data.parentFolderName = packKey;
 
             // Setup tile
@@ -219,11 +221,11 @@ namespace AdofaiCSL.API.Extensions {
             tile.Setup("Custom:" + string.Join(Path.DirectorySeparatorChar.ToString(), dirs.Skip(dirs.Length - (depth + 1)).Take(depth + 1)), data);
 
             // Add levels and packs
-            foreach (string directory in Directory.GetDirectories(path)) {
-
+            foreach (string directory in Directory.GetDirectories(path))
+            {
                 // Add child pack
                 if (Directory.GetFiles(directory, "main.pack").Length > 0)
-                    screen.AddChildPack(directory, tile.levelKey, data, depth + 1);
+                    screen.AddChildPack(directory, tile.levelKey, depth + 1);
 
                 // Add child level
                 else if (Directory.GetFiles(directory, "main.adofai").Length > 0)

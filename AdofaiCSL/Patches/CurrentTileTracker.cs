@@ -1,9 +1,9 @@
 ﻿using HarmonyLib;
 
-namespace AdofaiCSL.Patches {
-
-    public static class CurrentTileTracker {
-
+namespace AdofaiCSL.Patches
+{
+    public static class CurrentTileTracker
+    {
         /// <summary>
         /// Custom tracker for the current tile.
         /// </summary>
@@ -11,8 +11,8 @@ namespace AdofaiCSL.Patches {
     }
 
     [HarmonyPatch(typeof(scnCLS), nameof(scnCLS.SelectLevel))]
-    internal static class TrackerUpdate {
-
+    internal static class TrackerUpdate
+    {
         /// <summary>
         /// Update the tracker after a level is selected.
         /// </summary>
@@ -21,12 +21,13 @@ namespace AdofaiCSL.Patches {
     }
 
     [HarmonyPatch(typeof(scrController), nameof(scrController.QuitToMainMenu))]
-    internal static class TrackerReset {
-
+    internal static class TrackerReset
+    {
         /// <summary>
         /// Reset the custom tracker.
         /// </summary>
-        private static void Postfix() {
+        private static void Postfix()
+        {
             if (GCS.sceneToLoad == "scnLevelSelect")
                 CurrentTileTracker.TileKey = string.Empty;
         }

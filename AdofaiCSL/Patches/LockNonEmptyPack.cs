@@ -1,11 +1,11 @@
 ﻿using ADOFAI;
 using HarmonyLib;
 
-namespace AdofaiCSL.Patches {
-
+namespace AdofaiCSL.Patches
+{
     [HarmonyPatch(typeof(scnCLS), nameof(scnCLS.DeleteLevel))]
-    internal static class LockNonEmptyPack {
-
+    internal static class LockNonEmptyPack
+    {
         /// <summary>
         /// Do not delete packs with levels.
         /// </summary>

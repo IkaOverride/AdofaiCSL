@@ -1,9 +1,10 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.IO;
-using HarmonyLib;
 using static UnityModManagerNet.UnityModManager;
 
-namespace AdofaiCSL {
+namespace AdofaiCSL
+{
 
     public class Main {
 
@@ -23,21 +24,23 @@ namespace AdofaiCSL {
         public static Harmony HarmonyInstance;
 
         /// <summary>
-        /// Entry point for SongLoader.
+        /// Entry point for AdofaiCSL.
         /// </summary>
         /// <param name="modEntry">The mod entry.</param>
-        private static void Load(ModEntry modEntry) {
+        private static void Load(ModEntry modEntry) 
+        {
             ModEntry = modEntry;
 
             HarmonyInstance = new Harmony("adofaicsl");
             HarmonyInstance.PatchAll();
 
-            if (!Directory.Exists(SongsDirectory)) {
+            if (!Directory.Exists(SongsDirectory)) 
+            {
                 modEntry.Logger.Log($"Creating directory: '{SongsDirectory}'");
                 Directory.CreateDirectory(SongsDirectory);
             }
 
-            modEntry.OnGUI += ModGUI.Check;
+            modEntry.OnGUI += Interface.Interface.Check;
         }
     }
 }

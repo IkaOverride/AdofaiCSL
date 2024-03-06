@@ -2,15 +2,16 @@
 using HarmonyLib;
 using System.Linq;
 
-namespace AdofaiCSL.Patches {
-
+namespace AdofaiCSL.Patches
+{
     /// <summary>
     /// Don't enter if there's no levels.
     /// </summary>
     [HarmonyPatch(typeof(scnCLS), nameof(scnCLS.EnterFolder))]
-    internal static class LockEmptyFolder {
-
-        private static bool Prefix(scnCLS __instance) {
+    internal static class LockEmptyFolder
+    {
+        private static bool Prefix(scnCLS __instance)
+        {
 
             if (scnCLS.featuredLevelsMode || __instance.loadedLevels.Values.Where(level => level.parentFolderName == __instance.levelToSelect).Count() > 0)
                 return true;

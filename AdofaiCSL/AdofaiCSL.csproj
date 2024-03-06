@@ -9,6 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AdofaiCSL</RootNamespace>
     <AssemblyName>AdofaiCSL</AssemblyName>
+    <LangVersion>latest</LangVersion>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -62,7 +63,9 @@
     <Compile Include="API\Extensions\CustomLevelTileExtensions.cs" />
     <Compile Include="API\Extensions\scnCLSExtensions.cs" />
     <Compile Include="API\Features\SongsDirectory.cs" />
-    <Compile Include="ModGUI.cs" />
+    <Compile Include="Interface\EditingPack.cs" />
+    <Compile Include="Interface\Interface.cs" />
+    <Compile Include="Interface\Styles.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Patches\CustomSongs.cs" />
     <Compile Include="API\Features\CustomConfig.cs" />
@@ -76,10 +79,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\info.json" />
+    <None Include="info.json" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /Y $(ProjectDir)assets $(OutDir)" />
+    <Exec Command="copy /Y $(ProjectDir)info.json $(OutDir)" />
   </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

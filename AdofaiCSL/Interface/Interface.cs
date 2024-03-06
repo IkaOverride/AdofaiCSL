@@ -1,86 +1,59 @@
-﻿using ADOFAI;
-using DG.Tweening;
-using System.IO;
-using System.Linq;
-using UnityEngine;
-using AdofaiCSL.API.Extensions;
-using System.Text.RegularExpressions;
+﻿using AdofaiCSL.API.Extensions;
 using AdofaiCSL.API.Features;
+using AdofaiCSL.Patches;
+using DG.Tweening;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Diagnostics;
-using HarmonyLib;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using UnityEngine;
 using static SteamWorkshop;
 using static UnityModManagerNet.UnityModManager;
-using AdofaiCSL.Patches;
 
-namespace AdofaiCSL {
-
-    internal static class ModGUI {
-
-        internal static GUIStyle headerStyle = new GUIStyle(GUI.skin.label) {
-            fontStyle = FontStyle.Bold,
-            fontSize = 15,
-            normal = new GUIStyleState() {
-                 textColor = new Color(0.2f, 0.667f, 0.9f)
-            }
-        };
-
-        internal static GUIStyle warningStyle = new GUIStyle(GUI.skin.label) {
-            fontStyle = FontStyle.Bold,
-            normal = new GUIStyleState() {
-                textColor = new Color(0.9f, 0, 0.05f)
-            }
-        };
-
+namespace AdofaiCSL.Interface
+{
+    internal static class Interface 
+    {
         internal static scnCLS screen;
 
         /// <summary>
-        /// Currently selected level.
+        /// Selected levels.
         /// </summary>
         internal static HashSet<string> selectedKeys = new HashSet<string>();
 
+        /// <summary>
+        /// If the player is on a tile.
+        /// </summary>
         internal static bool isOnTile = false;
 
+        /// <summary>
+        /// If the player is in a pack.
+        /// </summary>
         internal static bool isInPack = false;
 
-        internal static string queuedEditingKey = string.Empty;
+        internal static EditingPack editingPack = null;
 
-        internal static string editingKey = string.Empty;
-
-        internal static string editingTitle = string.Empty;
-
-        internal static string editingAuthor = string.Empty;
-
-        internal static string editingArtist = string.Empty;
-
-        internal static string editingDifficulty = string.Empty;
-
-        internal static string editingDescription = string.Empty;
-
-        internal static string editingImage = string.Empty;
-
-        internal static string editingIcon = string.Empty;
-
-        internal static string editingIconColor = string.Empty;
-
-        internal static void Check(ModEntry entry) {
+        internal static void Check(ModEntry _) 
+        {
             screen = scnCLS.instance;
-            if (screen is null || !screen.enabled || scnCLS.featuredLevelsMode || screen.showingInitialMenu) {
-                GUILayout.Label("You are not on the workshop custom level screen.", warningStyle);
-                return;
-            }
 
-            Show();
+            if (screen is null || !screen.enabled || scnCLS.featuredLevelsMode || screen.showingInitialMenu) 
+                GUILayout.Label("You are not on the workshop custom level screen.", Styles.Warning);
+
+            else
+                Show();
         }
 
-        internal static void Show() {
-
+        internal static void Show() 
+        {
             isOnTile = screen.IsKeyValid(screen.levelToSelect);
             isInPack = screen.IsKeyValid(screen.currentFolderName);
 
             GUILayout.BeginVertical();
 
-            bool openSongsPath = GUILayout.Button("Open main folder", GUILayout.Width(458), GUILayout.Height(22));
+            bool openSongsPath = GUILayout.Button("Open songs directory", GUILayout.Width(458), GUILayout.Height(22));
 
             // New pack
             GUILayout.BeginHorizontal();
@@ -102,7 +75,7 @@ namespace AdofaiCSL {
 
             GUILayout.Space(6);
 
-            // Tile
+            // Current tile
             GUILayout.BeginHorizontal();
             GUI.enabled = isOnTile;
             bool selectTile = GUILayout.Button(isOnTile && selectedKeys.Contains(screen.levelToSelect) ? "Deselect" : "Select", GUILayout.Width(80), GUILayout.Height(22));
@@ -113,7 +86,7 @@ namespace AdofaiCSL {
             GUILayout.Label($"Tile: {Regex.Replace((isOnTile ? screen.loadedLevelTiles[screen.levelToSelect].title.text.Replace('\n', ' ') : "/"), CustomLevelTileExtensions.NoTagsRegex, string.Empty)}");
             GUILayout.EndHorizontal();
 
-            // Pack
+            // Current pack
             GUILayout.BeginHorizontal();
             GUI.enabled = isInPack;
             bool selectPack = GUILayout.Button(isInPack && selectedKeys.Contains(screen.currentFolderName) ? "Deselect" : "Select", GUILayout.Width(80), GUILayout.Height(22));
@@ -125,10 +98,12 @@ namespace AdofaiCSL {
 
             GUILayout.Space(2);
 
+            // Buttons
             if (openSongsPath)
                 Process.Start(Main.SongsDirectory);
 
-            if (selectTile) {
+            if (selectTile) 
+            {
                 if (selectedKeys.Contains(screen.levelToSelect))
                     selectedKeys.Remove(screen.levelToSelect);
                 else
@@ -139,7 +114,10 @@ namespace AdofaiCSL {
                 Process.Start(screen.loadedLevelDirs[screen.levelToSelect]);
 
             if (editTile)
-                queuedEditingKey = screen.levelToSelect;
+            {
+                string packConfigPath = Path.Combine(screen.loadedLevelDirs[screen.levelToSelect], "main.pack");
+                editingPack = new EditingPack(screen.levelToSelect, CustomConfig.Read(packConfigPath).AsPackData());
+            }
 
             if (selectPack) {
                 if (selectedKeys.Contains(screen.currentFolderName))
@@ -152,7 +130,10 @@ namespace AdofaiCSL {
                 Process.Start(screen.loadedLevelDirs[screen.currentFolderName]);
 
             if (editPack)
-                queuedEditingKey = screen.currentFolderName;
+            {
+                string packConfigPath = Path.Combine(screen.loadedLevelDirs[screen.currentFolderName], "main.pack");
+                editingPack = new EditingPack(screen.currentFolderName, CustomConfig.Read(packConfigPath).AsPackData());
+            }
 
             if (newPackHere) {
                 string newPackPath = Path.Combine(isInPack ? screen.loadedLevelDirs[screen.currentFolderName] : Main.SongsDirectory, "Pack").GetUniqueDirectoryPath();
@@ -197,10 +178,10 @@ namespace AdofaiCSL {
             if (selectedKeys.Count > 0)
                 ShowSelector(screen);
 
-            if (screen.IsKeyValid(queuedEditingKey))
+            if (editingPack is not null && screen.IsKeyValid(editingPack.Key))
                 ShowEditor(screen);
             else
-                editingKey = string.Empty;
+                editingPack = null;
 
             GUILayout.EndVertical();
         }
@@ -215,7 +196,7 @@ namespace AdofaiCSL {
             bool onlyWorkshop = containsWorkshop && customKeys.Count() == 0;
             
             GUILayout.Space(6);
-            GUILayout.Label("Selector", headerStyle);
+            GUILayout.Label("Selector", Styles.Header);
             GUILayout.Space(1);
             GUILayout.Label($"Selected: {string.Join(", ", selectedKeys.Select(key => Regex.Replace(screen.loadedLevelTiles[key].title.text, CustomLevelTileExtensions.NoTagsRegex, string.Empty)))}");
             
@@ -243,11 +224,11 @@ namespace AdofaiCSL {
             GUILayout.EndHorizontal();
 
             if (containsWorkshop)
-                GUILayout.Label("You have workshop levels selected, you need to convert them in order to move them.", warningStyle);
+                GUILayout.Label("You have workshop levels selected, you need to convert them in order to move them.", Styles.Warning);
 
             if (convertCSL) {
 
-                HashSet<string> newKeys = new HashSet<string>();
+                HashSet<string> newKeys = [];
 
                 foreach (string key in workshopKeys) {
 
@@ -275,7 +256,7 @@ namespace AdofaiCSL {
 
             if (moveHere) {
 
-                HashSet<string> newKeys = new HashSet<string>();
+                HashSet<string> newKeys = [];
 
                 string basePath = isInPack ? Path.Combine(Main.SongsDirectory, screen.currentFolderName.Replace("Custom:", string.Empty)) : Main.SongsDirectory;
 
@@ -306,7 +287,7 @@ namespace AdofaiCSL {
 
             if (moveIn) {
 
-                HashSet<string> newKeys = new HashSet<string>();
+                HashSet<string> newKeys = [];
 
                 string basePath = Path.Combine(Main.SongsDirectory, screen.levelToSelect.Replace("Custom:", string.Empty));
 
@@ -374,69 +355,53 @@ namespace AdofaiCSL {
 
         internal static void ShowEditor(scnCLS screen) {
 
-            string packPath = screen.loadedLevelDirs[queuedEditingKey];
-            string packConfigPath = Path.Combine(packPath, "main.pack");
-            FolderDataCLS selectedPackData = CustomConfig.AsPackData(CustomConfig.Read(packConfigPath), packConfigPath);
-
-            if (selectedPackData is null)
-                return;
-
-            if (editingKey != queuedEditingKey) {
-                editingKey = queuedEditingKey;
-                editingTitle = selectedPackData.title.Trim();
-                editingAuthor = selectedPackData.author.Trim();
-                editingArtist = selectedPackData.artist.Trim();
-                editingDifficulty = selectedPackData.difficulty.ToString();
-                editingDescription = selectedPackData.description.Trim();
-                editingImage = selectedPackData.previewImage.Trim();
-                editingIcon = selectedPackData.previewIcon.Trim();
-                editingIconColor = selectedPackData.previewIconColor.ToHex();
-            }
+            string packPath = screen.loadedLevelDirs[editingPack.Key];
+            string baseTitle = screen.loadedLevels[editingPack.Key].title;
 
             GUILayout.Space(6);
-            GUILayout.Label("Pack editor", headerStyle);
+            GUILayout.Label("Pack editor", Styles.Header);
             GUILayout.Space(1);
-            GUILayout.Label($"Selected pack: {Regex.Replace(selectedPackData.title, CustomLevelTileExtensions.NoTagsRegex, string.Empty)}");
+            GUILayout.Label($"Selected pack: {Regex.Replace(baseTitle, CustomLevelTileExtensions.NoTagsRegex, string.Empty)}");
             GUILayout.Label($"Path: {packPath}");
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Title:", GUILayout.ExpandWidth(false));
-            editingTitle = GUILayout.TextField(editingTitle);
+            editingPack.Title = GUILayout.TextField(editingPack.Title);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Author:", GUILayout.ExpandWidth(false));
-            editingAuthor = GUILayout.TextField(editingAuthor);
+            editingPack.Author = GUILayout.TextField(editingPack.Author);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Artist:", GUILayout.ExpandWidth(false));
-            editingArtist = GUILayout.TextField(editingArtist);
+            editingPack.Artist = GUILayout.TextField(editingPack.Artist);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Difficulty:", GUILayout.ExpandWidth(false));
-            editingDifficulty = GUILayout.TextField(editingDifficulty);
+            editingPack.Difficulty = GUILayout.TextField(editingPack.Difficulty);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Description:", GUILayout.ExpandWidth(false));
-            editingDescription = GUILayout.TextField(editingDescription);
+            editingPack.Description = GUILayout.TextField(editingPack.Description);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Image relative path:", GUILayout.ExpandWidth(false));
-            editingImage = GUILayout.TextField(editingImage);
+            editingPack.ImageRelativePath = GUILayout.TextField(editingPack.ImageRelativePath);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Icon relative path:", GUILayout.ExpandWidth(false));
-            editingIcon = GUILayout.TextField(editingIcon);
+            editingPack.IconRelativePath = GUILayout.TextField(editingPack.IconRelativePath);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(650));
             GUILayout.Label("Icon color:", GUILayout.ExpandWidth(false));
-            editingIconColor = GUILayout.TextField(editingIconColor);
+            editingPack.IconColor = GUILayout.TextField(editingPack.IconColor);
             GUILayout.EndHorizontal();
 
             GUILayout.Space(0.5f);
@@ -449,21 +414,23 @@ namespace AdofaiCSL {
             GUILayout.EndHorizontal();
 
             if (cancel)
-                queuedEditingKey = string.Empty;
+                editingPack = null;
 
             if (save) {
 
-                queuedEditingKey = string.Empty;
+                editingPack = null;
+
+                string packConfigPath = Path.Combine(packPath, "main.pack");
 
                 CustomConfig.Write(packConfigPath, new Dictionary<string, string>() {
-                    { "title", editingTitle },
-                    { "author", editingAuthor },
-                    { "artist", editingArtist },
-                    { "difficulty", editingDifficulty },
-                    { "description", editingDescription },
-                    { "image", editingImage },
-                    { "icon", editingIcon },
-                    { "color", editingIconColor },
+                    { "title", editingPack.Title },
+                    { "author", editingPack.Author },
+                    { "artist", editingPack.Artist },
+                    { "difficulty", editingPack.Difficulty },
+                    { "description", editingPack.Description },
+                    { "image", editingPack.ImageRelativePath },
+                    { "icon", editingPack.IconRelativePath },
+                    { "color", editingPack.IconColor },
                 });
 
                 DOVirtual.DelayedCall(0f, () => screen.Refresh());
