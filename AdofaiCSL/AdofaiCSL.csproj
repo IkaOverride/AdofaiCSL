@@ -63,6 +63,7 @@
     <Compile Include="API\Extensions\CustomLevelTileExtensions.cs" />
     <Compile Include="API\Extensions\scnCLSExtensions.cs" />
     <Compile Include="API\Features\SongsDirectory.cs" />
+    <Compile Include="BetterCLSLoader.cs" />
     <Compile Include="Interface\EditingPack.cs" />
     <Compile Include="Interface\Interface.cs" />
     <Compile Include="Interface\Styles.cs" />

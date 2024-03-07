@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -14,6 +13,9 @@ namespace AdofaiCSL.API.Features
         /// <param name="path">The path to the directory.</param>
         public static void SortAsSongsDirectory(this string path)
         {
+            if (!Directory.Exists(path))
+                return;
+
             foreach (string directory in Directory.GetDirectories(path))
             {
                 // Sort pack
@@ -32,7 +34,6 @@ namespace AdofaiCSL.API.Features
         /// <param name="path">The path to the directory.</param>
         public static void SortAsLevelDirectory(this string path)
         {
-
             List<string> charts = [.. Directory.GetFiles(path, "*.adofai")];
 
             // Ignore the backup file
@@ -53,10 +54,8 @@ namespace AdofaiCSL.API.Features
         /// <param name="path">The path to the directory.</param>
         public static void SortAsPackDirectory(this string path)
         {
-
             foreach (string directory in Directory.GetDirectories(path))
             {
-
                 List<string> configs = [.. Directory.GetFiles(path, "*.pack")];
 
                 // If there is only one file, rename it to "main.adofai"
@@ -79,7 +78,6 @@ namespace AdofaiCSL.API.Features
 
         public static string GetUniqueDirectoryPath(this string path)
         {
-            
             if (!Directory.Exists(path))
                 return path;
 

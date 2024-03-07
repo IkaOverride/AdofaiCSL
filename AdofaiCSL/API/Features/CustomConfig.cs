@@ -89,5 +89,8 @@ namespace AdofaiCSL.API.Features
                     packConfig.ContainsKey("color") ? packConfig["color"].Trim().HexToColor() : default
                 );
         }
+
+        public static string[] Split(this string str, string separator, StringSplitOptions options = StringSplitOptions.None)
+            => str.Split(new string[] { separator }, options);
     }
 }

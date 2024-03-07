@@ -1,13 +1,12 @@
 ﻿using HarmonyLib;
 using System;
 using System.IO;
+using System.Linq;
 using static UnityModManagerNet.UnityModManager;
 
 namespace AdofaiCSL
 {
-
     public class Main {
-
         /// <summary>
         /// The path to the custom songs.
         /// </summary>
@@ -32,7 +31,6 @@ namespace AdofaiCSL
             ModEntry = modEntry;
 
             HarmonyInstance = new Harmony("adofaicsl");
-            HarmonyInstance.PatchAll();
 
             if (!Directory.Exists(SongsDirectory)) 
             {
@@ -40,7 +38,23 @@ namespace AdofaiCSL
                 Directory.CreateDirectory(SongsDirectory);
             }
 
-            modEntry.OnGUI += Interface.Interface.Check;
+            BetterCLSLoader.BetterCLSUnity = AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault(assembly => assembly.GetName().Name == "BetterCLSUnity");
+
+            if (BetterCLSLoader.IsBetterCLS)
+            {
+                HarmonyInstance.Patch(
+                    AccessTools.Method(BetterCLSLoader.BetterCLSUnity.GetType("BetterCLSUnity.SongListController"), "LoadCustomFiles"), // Method to patch
+                    postfix: new HarmonyMethod(typeof(BetterCLSLoader).GetMethod(nameof(BetterCLSLoader.LoadCustomFiles))) // Postfix
+                );
+                
+            }
+
+            else
+            {
+                HarmonyInstance.PatchAll();
+                modEntry.OnGUI += Interface.Interface.Check;
+            }
         }
     }
 }

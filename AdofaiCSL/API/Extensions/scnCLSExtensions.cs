@@ -96,7 +96,7 @@ namespace AdofaiCSL.API.Extensions
             GameObject gameObject = screen.CreateTile(screen.gemTopY);
 
             // Setup data or return if it can't
-            LevelDataCLS data = new LevelDataCLS();
+            LevelDataCLS data = new();
             if (!data.TrySetup(path))
                 return;
 

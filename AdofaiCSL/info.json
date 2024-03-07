@@ -4,5 +4,6 @@
 	"DisplayName": "AdofaiCSL",
 	"Version": "3.0.0",
 	"EntryMethod": "AdofaiCSL.Main.Load",
+	"LoadAfter":  [ "BetterCLS" ],
 	"Repository": "https://bot.adofai.gg/api/mods/AdofaiCSL/Repository.json"
 }

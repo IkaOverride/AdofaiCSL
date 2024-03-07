@@ -17,8 +17,8 @@ namespace AdofaiCSL.API.Extensions
         public static void Setup(this CustomLevelTile tile, string key, LevelDataCLS data)
         {
             tile.levelKey = key;
-            tile.title.text = Regex.Replace(data.title, NoTagsRegex, "").Trim();
-            tile.artist.text = Regex.Replace(data.artist, NoTagsRegex, "").Trim();
+            tile.title.text = Regex.Replace(data.title, NoTagsRegex, string.Empty).Trim();
+            tile.artist.text = Regex.Replace(data.artist, NoTagsRegex, string.Empty).Trim();
             tile.image.enabled = data.previewIcon.Any();
         }
 
