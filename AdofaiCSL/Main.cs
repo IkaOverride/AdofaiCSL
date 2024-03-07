@@ -47,7 +47,6 @@ namespace AdofaiCSL
                     AccessTools.Method(BetterCLSLoader.BetterCLSUnity.GetType("BetterCLSUnity.SongListController"), "LoadCustomFiles"), // Method to patch
                     postfix: new HarmonyMethod(typeof(BetterCLSLoader).GetMethod(nameof(BetterCLSLoader.LoadCustomFiles))) // Postfix
                 );
-                
             }
 
             else
