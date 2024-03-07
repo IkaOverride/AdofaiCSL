@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("AdofaiCSL")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("ADOFAI custom song loader for non-workshop levels")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("AdofaiCSL")]
-[assembly: AssemblyCopyright("Copyright © Thijn Smulders 2023")]
+[assembly: AssemblyCopyright("Copyright © 2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

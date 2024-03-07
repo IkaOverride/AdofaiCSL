@@ -35,7 +35,7 @@ namespace AdofaiCSL.Interface
 
         internal static EditingPack editingPack = null;
 
-        internal static void Check(ModEntry _) 
+        internal static void Check(ModEntry _)
         {
             screen = scnCLS.instance;
 
@@ -46,7 +46,7 @@ namespace AdofaiCSL.Interface
                 Show();
         }
 
-        internal static void Show() 
+        internal static void Show()
         {
             isOnTile = screen.IsKeyValid(screen.levelToSelect);
             isInPack = screen.IsKeyValid(screen.currentFolderName);
@@ -102,7 +102,7 @@ namespace AdofaiCSL.Interface
             if (openSongsPath)
                 Process.Start(Main.SongsDirectory);
 
-            if (selectTile) 
+            if (selectTile)
             {
                 if (selectedKeys.Contains(screen.levelToSelect))
                     selectedKeys.Remove(screen.levelToSelect);
@@ -119,7 +119,8 @@ namespace AdofaiCSL.Interface
                 editingPack = new EditingPack(screen.levelToSelect, CustomConfig.Read(packConfigPath).AsPackData());
             }
 
-            if (selectPack) {
+            if (selectPack)
+            {
                 if (selectedKeys.Contains(screen.currentFolderName))
                     selectedKeys.Remove(screen.currentFolderName);
                 else
@@ -135,7 +136,8 @@ namespace AdofaiCSL.Interface
                 editingPack = new EditingPack(screen.currentFolderName, CustomConfig.Read(packConfigPath).AsPackData());
             }
 
-            if (newPackHere) {
+            if (newPackHere)
+            {
                 string newPackPath = Path.Combine(isInPack ? screen.loadedLevelDirs[screen.currentFolderName] : Main.SongsDirectory, "Pack").GetUniqueDirectoryPath();
                 string newPackName = newPackPath.Split(Path.DirectorySeparatorChar).Last();
                 newPackPath.CreatePack();
@@ -143,7 +145,8 @@ namespace AdofaiCSL.Interface
                 DOVirtual.DelayedCall(0f, () => screen.Refresh());
             }
             
-            if (newPackInTile) {
+            if (newPackInTile)
+            {
                 string newPackPath = Path.Combine(screen.loadedLevelDirs[screen.levelToSelect], "Pack").GetUniqueDirectoryPath();
                 string newPackName = newPackPath.Split(Path.DirectorySeparatorChar).Last();
                 newPackPath.CreatePack();
@@ -151,7 +154,8 @@ namespace AdofaiCSL.Interface
                 DOVirtual.DelayedCall(0f, () => screen.Refresh());
             }
 
-            if (newPackOut) {
+            if (newPackOut)
+            {
                 string[] packSplitPath = screen.loadedLevelDirs[screen.currentFolderName].Split(Path.DirectorySeparatorChar);
                 string[] packSplitKey = screen.currentFolderName.Split(Path.DirectorySeparatorChar);
                 string newPackPath = Path.Combine(string.Join(Path.DirectorySeparatorChar.ToString(), packSplitPath.Take(packSplitPath.Length - 2)), "Pack").GetUniqueDirectoryPath();
@@ -186,7 +190,8 @@ namespace AdofaiCSL.Interface
             GUILayout.EndVertical();
         }
 
-        internal static void ShowSelector(scnCLS screen) {
+        internal static void ShowSelector(scnCLS screen)
+        {
             bool isOnPack = false;
             isOnPack = isOnTile && screen.loadedLevels[screen.levelToSelect].isFolder;
             
@@ -226,12 +231,12 @@ namespace AdofaiCSL.Interface
             if (containsWorkshop)
                 GUILayout.Label("You have workshop levels selected, you need to convert them in order to move them.", Styles.Warning);
 
-            if (convertCSL) {
-
+            if (convertCSL)
+            {
                 HashSet<string> newKeys = [];
 
-                foreach (string key in workshopKeys) {
-
+                foreach (string key in workshopKeys)
+                {
                     selectedKeys.Remove(key);
 
                     string newPath = Path.Combine(Main.SongsDirectory, key).GetUniqueDirectoryPath();
@@ -248,14 +253,15 @@ namespace AdofaiCSL.Interface
                     newKeys.Add("Custom:" + tileName);
                 }
 
-                DOVirtual.DelayedCall(0.5f, () => {
+                DOVirtual.DelayedCall(0.5f, () =>
+                {
                     screen.Refresh();
                     newKeys.Do(key => selectedKeys.Add(key));
                 });
             }
 
-            if (moveHere) {
-
+            if (moveHere)
+            {
                 HashSet<string> newKeys = [];
 
                 string basePath = isInPack ? Path.Combine(Main.SongsDirectory, screen.currentFolderName.Replace("Custom:", string.Empty)) : Main.SongsDirectory;
@@ -279,20 +285,21 @@ namespace AdofaiCSL.Interface
                     newKeys.Add(isInPack ? Path.Combine(screen.currentFolderName, tileName) : $"Custom:{tileName}");
                 }
 
-                DOVirtual.DelayedCall(0f, () => {
+                DOVirtual.DelayedCall(0f, () =>
+                {
                     screen.Refresh();
                     newKeys.Do(key => selectedKeys.Add(key));
                 });
             }
 
-            if (moveIn) {
-
+            if (moveIn)
+            {
                 HashSet<string> newKeys = [];
 
                 string basePath = Path.Combine(Main.SongsDirectory, screen.levelToSelect.Replace("Custom:", string.Empty));
 
-                foreach (string key in customKeys) {
-
+                foreach (string key in customKeys)
+                {
                     string tileName = key.Replace("Custom:", string.Empty).Split(Path.DirectorySeparatorChar).Last();
                     string newPath = Path.Combine(basePath, tileName);
                     string oldPath = screen.loadedLevelDirs[key];
@@ -310,22 +317,23 @@ namespace AdofaiCSL.Interface
                     newKeys.Add(Path.Combine(screen.levelToSelect, tileName));
                 }
 
-                DOVirtual.DelayedCall(0f, () => {
+                DOVirtual.DelayedCall(0f, () =>
+                {
                     screen.Refresh();
                     newKeys.Do(key => selectedKeys.Add(key));
                 });
             }
 
-            if (moveOut) {
-
-                HashSet<string> newKeys = new HashSet<string>();
+            if (moveOut)
+            {
+                HashSet<string> newKeys = [];
 
                 string[] currentSplitKey = screen.levelToSelect.Split(Path.DirectorySeparatorChar);
                 string[] currentSplitPath = screen.loadedLevelDirs[screen.levelToSelect].Split(Path.DirectorySeparatorChar);
                 string basePath = string.Join(Path.DirectorySeparatorChar.ToString(), currentSplitPath.Take(currentSplitPath.Length - 2));
 
-                foreach (string key in customKeys) {
-
+                foreach (string key in customKeys)
+                {
                     string tileName = key.Replace("Custom:", string.Empty).Split(Path.DirectorySeparatorChar).Last();
                     string newPath = Path.Combine(basePath, tileName);
                     string oldPath = screen.loadedLevelDirs[key];
@@ -343,7 +351,8 @@ namespace AdofaiCSL.Interface
                     newKeys.Add(Path.Combine($"Custom:{string.Join(Path.DirectorySeparatorChar.ToString(), currentSplitKey.Take(currentSplitKey.Length - 2))}", tileName));
                 }
 
-                DOVirtual.DelayedCall(0f, () => {
+                DOVirtual.DelayedCall(0f, () =>
+                {
                     screen.Refresh();
                     newKeys.Do(key => selectedKeys.Add(key));
                 });
@@ -353,8 +362,8 @@ namespace AdofaiCSL.Interface
                 selectedKeys.Clear();
         }
 
-        internal static void ShowEditor(scnCLS screen) {
-
+        internal static void ShowEditor(scnCLS screen)
+        {
             string packPath = screen.loadedLevelDirs[editingPack.Key];
             string baseTitle = screen.loadedLevels[editingPack.Key].title;
 
@@ -416,7 +425,7 @@ namespace AdofaiCSL.Interface
             if (cancel)
                 editingPack = null;
 
-            if (save) 
+            if (save)
             {
                 string packConfigPath = Path.Combine(packPath, "main.pack");
 

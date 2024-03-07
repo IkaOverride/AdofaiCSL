@@ -23,6 +23,9 @@ namespace AdofaiCSL.Patches
                     y = Mathf.Clamp(y, topPos - packLevelCount, topPos - 1);
                 }
                 
+                else if (screen.gemBottom.gameObject.activeSelf && screen.gemTop.gameObject.activeSelf)
+                    y = Mathf.Clamp(y, screen.gemBottomY + 1, screen.gemTopY - 1);
+
                 else
                     y = Mathf.Clamp(y, screen.loadedLevelTiles.Values.Min(tile => tile.y), screen.loadedLevelTiles.Values.Max(tile => tile.y));
             }

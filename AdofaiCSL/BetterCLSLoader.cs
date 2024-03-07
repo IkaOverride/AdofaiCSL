@@ -22,31 +22,29 @@ namespace AdofaiCSL
         {
             Main.SongsDirectory.SortAsSongsDirectory();
 
-            ConcurrentBag<object> entries = OpenPack(Main.SongsDirectory, __instance);
+            ConcurrentBag<object> entries = OpenDirectory(Main.SongsDirectory, __instance);
 
-            Type songDetailData = BetterCLSUnity.GetType("BetterCLSUnity.SongDetailData");
-            IOrderedEnumerable<object> orderedEntries = entries.OrderBy(entry => (string) Field(songDetailData, "Title").GetValue(entry));
+            IOrderedEnumerable<object> orderedEntries = entries.OrderBy(entry => (string) Field(entry.GetType(), "Title").GetValue(entry));
 
             MethodInfo add = Method(__result.GetType(), "Add");
-
             foreach (object entry in orderedEntries)
                 add.Invoke(__result, [entry]);
         }
 
-        public static ConcurrentBag<object> OpenPack(string path, object __instance)
+        public static ConcurrentBag<object> OpenDirectory(string path, object __instance)
         {
             ConcurrentBag<object> entries = [];
 
             Parallel.ForEach(Directory.GetDirectories(path), directory =>
             {
-                // Sort pack
-                if (Directory.GetFiles(directory, "*.pack").Length > 0)
-                    foreach (object entry in OpenPack(directory, __instance))
-                        entries.Add(entry);
-
-                // Sort level
-                else if (Directory.GetFiles(directory, "*.adofai").Length > 0)
+                // Level
+                if (Directory.GetFiles(directory, "main.adofai").Length > 0)
                     entries.Add(AddLevel(directory, __instance));
+
+                // Directory
+                else if (Directory.GetDirectories(directory).Length > 0)
+                    foreach (object entry in OpenDirectory(directory, __instance))
+                        entries.Add(entry);
             });
 
             return entries;
