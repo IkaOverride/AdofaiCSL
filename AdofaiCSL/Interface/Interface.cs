@@ -195,7 +195,7 @@ namespace AdofaiCSL.Interface
             bool isOnPack = false;
             isOnPack = isOnTile && screen.loadedLevels[screen.levelToSelect].isFolder;
             
-            IEnumerable<string> workshopKeys = selectedKeys.ToList().Where(key => screen.IsKeyWorkshop(key));
+            IEnumerable<string> workshopKeys = selectedKeys.ToList().Where(screen.IsKeyWorkshop);
             IEnumerable<string> customKeys = selectedKeys.ToList().Where(key => !screen.IsKeyWorkshop(key));
             bool containsWorkshop = workshopKeys.Count() > 0;
             bool onlyWorkshop = containsWorkshop && customKeys.Count() == 0;
@@ -246,8 +246,8 @@ namespace AdofaiCSL.Interface
                     screen.isWorkshopLevel.Remove(key);
                     screen.loadedLevelIsDeleted.Remove(key);
 
-                    if (ulong.TryParse(key, out var levelId))
-                        foreach (ResultItem resultItem in resultItems)
+                    if (ulong.TryParse(key, out ulong levelId))
+                        foreach (ResultItem resultItem in resultItems.Where(item => (ulong) item.id == levelId))
                             Unsubscribe(resultItem.id);
 
                     newKeys.Add("Custom:" + tileName);

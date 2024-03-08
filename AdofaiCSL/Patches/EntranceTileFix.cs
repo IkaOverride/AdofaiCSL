@@ -1,5 +1,6 @@
 ﻿using AdofaiCSL.API.Extensions;
 using HarmonyLib;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace AdofaiCSL.Patches
 
             if (screen.levelCount >= screen.levelCountForLoop)
             {    
-                if (screen.IsKeyValid(screen.currentFolderName))
+                if (screen.IsKeyValid(screen.currentFolderName) && screen.gemExitFolder.gameObject.activeSelf)
                 {
                     float topPos = screen.gemExitFolder.position.y;
                     int packLevelCount = screen.loadedLevels.Values.Where(level => level.parentFolderName == screen.currentFolderName).Count();
@@ -27,7 +28,10 @@ namespace AdofaiCSL.Patches
                     y = Mathf.Clamp(y, screen.gemBottomY + 1, screen.gemTopY - 1);
 
                 else
-                    y = Mathf.Clamp(y, screen.loadedLevelTiles.Values.Min(tile => tile.y), screen.loadedLevelTiles.Values.Max(tile => tile.y));
+                {
+                    IEnumerable<float> positions = screen.loadedLevels.Where(kvp => kvp.Value.parentFolderName == screen.currentFolderName).Select(kvp => screen.loadedLevelTiles[kvp.Key].y);
+                    y = Mathf.Clamp(y, positions.Min(), positions.Max());
+                }
             }
 
             __instance.transform.MoveY(y);

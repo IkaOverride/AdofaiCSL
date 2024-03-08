@@ -17,7 +17,7 @@ namespace AdofaiCSL.Patches
             __instance.chainTop.gameObject.SetActive(false);
             __instance.gemExitFolder.gameObject.SetActive(false);
 
-            if (__instance.showingInitialMenu || SteamUGC.GetNumSubscribedItems() > 0)
+            if (__instance.showingInitialMenu || scnCLS.featuredLevelsMode || SteamUGC.GetNumSubscribedItems() > 0)
                 return true;
 
             __instance.refreshing = true;
