@@ -38,22 +38,18 @@ namespace AdofaiCSL
                 Directory.CreateDirectory(SongsDirectory);
             }
 
-            BetterCLSLoader.BetterCLSUnity = AppDomain.CurrentDomain.GetAssemblies()
-                .FirstOrDefault(assembly => assembly.GetName().Name == "BetterCLSUnity");
+            BetterCLSLoader.Init();
 
             if (BetterCLSLoader.IsBetterCLS)
-            {
                 HarmonyInstance.Patch(
                     AccessTools.Method(BetterCLSLoader.BetterCLSUnity.GetType("BetterCLSUnity.SongListController"), "LoadCustomFiles"), // Method to patch
                     postfix: new HarmonyMethod(typeof(BetterCLSLoader).GetMethod(nameof(BetterCLSLoader.LoadCustomFiles))) // Postfix
                 );
-            }
 
             else
-            {
                 HarmonyInstance.PatchAll();
-                modEntry.OnGUI += Interface.Interface.Check;
-            }
+
+            modEntry.OnGUI += Interface.Interface.Check;
         }
     }
 }

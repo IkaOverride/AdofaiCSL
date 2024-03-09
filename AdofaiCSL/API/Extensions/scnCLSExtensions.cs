@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using static HarmonyLib.Code;
 using Object = UnityEngine.Object;
 
 namespace AdofaiCSL.API.Extensions
@@ -20,6 +21,34 @@ namespace AdofaiCSL.API.Extensions
         public static bool IsKeyValid(this scnCLS screen, string key) => key != null && screen.loadedLevels.ContainsKey(key);
 
         public static bool IsKeyWorkshop(this scnCLS screen, string key) => screen.isWorkshopLevel.TryGetValue(key, out bool isWorkshop) && isWorkshop;
+
+        public static bool IsKeySearched(this scnCLS screen, string key)
+        {
+            GenericDataCLS genericDataCLS = screen.loadedLevels[key];
+            string[] array = [genericDataCLS.artist, genericDataCLS.author, genericDataCLS.title];
+            bool flag = false;
+            if (genericDataCLS.parentFolderName == screen.currentFolderName)
+            {
+                if (!screen.searchParameter.IsNullOrEmpty())
+                {
+                    string[] array2 = array;
+                    for (int i = 0; i < array2.Length; i++)
+                    {
+                        if (array2[i].RemoveRichTags().ToLower().Contains(screen.searchParameter.ToLower()))
+                        {
+                            flag = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    flag = true;
+                }
+            }
+
+            return flag;
+        }
 
         /// <summary>
         /// Create a custom tile.

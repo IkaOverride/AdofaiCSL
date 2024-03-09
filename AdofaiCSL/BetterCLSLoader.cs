@@ -16,7 +16,13 @@ namespace AdofaiCSL
     {
         public static Assembly BetterCLSUnity;
 
-        public static bool IsBetterCLS => BetterCLSUnity is not null;
+        public static bool IsBetterCLS { get; private set; }
+
+        public static void Init()
+        {
+            IsBetterCLS = (BetterCLSUnity = AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault(assembly => assembly.GetName().Name == "BetterCLSUnity")) is not null;
+        }
 
         public static void LoadCustomFiles(object __instance, object __result)
         {
