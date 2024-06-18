@@ -81,22 +81,22 @@ namespace AdofaiCSL.Interface
             // Current tile
             GUILayout.BeginHorizontal();
             GUI.enabled = isOnTile;
-            bool selectTile = GUILayout.Button(isOnTile && selectedKeys.Contains(screen.levelToSelect) ? "Deselect" : "Select", GUILayout.Width(90), GUILayout.Height(22));
+            bool selectTile = GUILayout.Button(isOnTile && selectedKeys.Contains(screen.levelToSelect) ? "Deselect" : "Select", GUILayout.Width(110), GUILayout.Height(22));
             GUI.enabled = isOnTile && screen.loadedLevels[screen.levelToSelect].isFolder;
-            bool editTile = GUILayout.Button("Edit pack", GUILayout.Width(90), GUILayout.Height(22));
+            bool editTile = GUILayout.Button("Edit pack", GUILayout.Width(110), GUILayout.Height(22));
             GUI.enabled = true;
-            bool openTilePath = GUILayout.Button("Open", GUILayout.Width(90), GUILayout.Height(22));
-            GUILayout.Label($"Tile: {Regex.Replace((isOnTile ? screen.loadedLevelTiles[screen.levelToSelect].title.text.Replace('\n', ' ') : "/"), CustomLevelTileExtensions.NoTagsRegex, string.Empty)}");
+            bool openTilePath = GUILayout.Button("Open directory", GUILayout.Width(110), GUILayout.Height(22));
+            GUILayout.Label($"Current tile: {Regex.Replace((isOnTile ? screen.loadedLevelTiles[screen.levelToSelect].title.text.Replace('\n', ' ') : "/"), CustomLevelTileExtensions.NoTagsRegex, string.Empty)}");
             GUILayout.EndHorizontal();
 
             // Current pack
             GUILayout.BeginHorizontal();
             GUI.enabled = isInPack;
-            bool selectPack = GUILayout.Button(isInPack && selectedKeys.Contains(screen.currentFolderName) ? "Deselect" : "Select", GUILayout.Width(90), GUILayout.Height(22));
-            bool editPack = GUILayout.Button("Edit pack", GUILayout.Width(90), GUILayout.Height(22));
+            bool selectPack = GUILayout.Button(isInPack && selectedKeys.Contains(screen.currentFolderName) ? "Deselect" : "Select", GUILayout.Width(110), GUILayout.Height(22));
+            bool editPack = GUILayout.Button("Edit pack", GUILayout.Width(110), GUILayout.Height(22));
             GUI.enabled = true;
-            bool openPackPath = GUILayout.Button("Open", GUILayout.Width(90), GUILayout.Height(22));
-            GUILayout.Label($"Pack: {Regex.Replace((isInPack ? screen.loadedLevelTiles[screen.currentFolderName].title.text.Replace('\n', ' ') : "/"), CustomLevelTileExtensions.NoTagsRegex, string.Empty)}");
+            bool openPackPath = GUILayout.Button("Open directory", GUILayout.Width(110), GUILayout.Height(22));
+            GUILayout.Label($"Current pack: {Regex.Replace((isInPack ? screen.loadedLevelTiles[screen.currentFolderName].title.text.Replace('\n', ' ') : "/"), CustomLevelTileExtensions.NoTagsRegex, string.Empty)}");
             GUILayout.EndHorizontal();
 
             GUILayout.Space(2);

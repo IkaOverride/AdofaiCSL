@@ -83,7 +83,7 @@
     <None Include="info.json" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /Y $(ProjectDir)info.json $(OutDir)" />
+    <Exec Command='copy /Y "$(ProjectDir)info.json" "$(OutDir)"' />
   </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

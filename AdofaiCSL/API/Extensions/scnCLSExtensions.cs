@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using static HarmonyLib.Code;
 using Object = UnityEngine.Object;
 
 namespace AdofaiCSL.API.Extensions
@@ -100,11 +99,15 @@ namespace AdofaiCSL.API.Extensions
                 {
                     // Add pack
                     if (Directory.GetFiles(directory, "main.pack").Length > 0)
+                    {
                         screen.AddPack(directory);
+                    }
 
                     // Add level
                     else if (Directory.GetFiles(directory, "main.adofai").Length > 0)
+                    {
                         screen.AddLevel(directory);
+                    }
                 }
 
                 catch (Exception e)
