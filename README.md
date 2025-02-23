@@ -9,6 +9,7 @@ Custom levels and packs are found in-game next to your workshop levels
 - Load levels without the workshop
 - Load packs
 - GUI to select/move levels and packs
+
 ![Showcase](./assets/showcase.gif)
 
 ## Add an existing level/pack
@@ -34,6 +35,7 @@ In the mod manager's settings (CTRL + F10), the mod has a GUI to help you manage
 - Select levels/packs
 - Create new packs
 - Edit packs
+
 ![GUI](./assets/gui.png)
 ![Pack editor](./assets/packeditor.png)
 
