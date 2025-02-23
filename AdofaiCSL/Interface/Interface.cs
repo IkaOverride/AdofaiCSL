@@ -14,7 +14,7 @@ using static UnityModManagerNet.UnityModManager;
 
 namespace AdofaiCSL.Interface
 {
-    internal static class Interface 
+    internal static class Interface
     {
         internal static scnCLS screen;
 
@@ -41,17 +41,63 @@ namespace AdofaiCSL.Interface
 
             if (screen is null || !screen.enabled || screen.refreshing || scnCLS.featuredLevelsMode || screen.showingInitialMenu)
             {
-                bool openSongsPath = GUILayout.Button("Open songs directory", GUILayout.Width(212), GUILayout.Height(22));
+                if (BetterCLSLoader.IsBetterCLS)
+                {
+                    bool openSongsPath = GUILayout.Button("Open songs directory", GUILayout.Width(212), GUILayout.Height(22));
 
-                if (!BetterCLSLoader.IsBetterCLS)
-                    GUILayout.Label("You are not on the workshop custom level screen.", Styles.Warning);
+                    if (openSongsPath)
+                        Process.Start(Main.SongsDirectory);
 
-                if (openSongsPath)
-                    Process.Start(Main.SongsDirectory);
+                    return;
+                }
+
+                ShowDisabled();
+                return;
             }
 
-            else
-                Show();
+            Show();
+        }
+
+        internal static void ShowDisabled()
+        {
+            GUILayout.BeginVertical();
+
+            GUILayout.BeginHorizontal();
+            bool openSongsPath = GUILayout.Button("Open songs directory", GUILayout.Width(212), GUILayout.Height(22));
+            GUI.enabled = false;
+            GUILayout.Button("New pack here", GUILayout.Width(212), GUILayout.Height(22));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Button("Select all here", GUILayout.Width(140), GUILayout.Height(22));
+            GUILayout.Button("Select levels here", GUILayout.Width(140), GUILayout.Height(22));
+            GUILayout.Button("Select packs here", GUILayout.Width(140), GUILayout.Height(22));
+            GUILayout.EndHorizontal();
+
+            GUILayout.Space(6);
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Button("Select", GUILayout.Width(110), GUILayout.Height(22));
+            GUILayout.Button("Edit pack info", GUILayout.Width(110), GUILayout.Height(22));
+            GUILayout.Button("Open directory", GUILayout.Width(110), GUILayout.Height(22));
+            GUILayout.Label($"Current tile: /");
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Button("Select", GUILayout.Width(110), GUILayout.Height(22));
+            GUILayout.Button("Edit pack info", GUILayout.Width(110), GUILayout.Height(22));
+            GUILayout.Button("Open directory", GUILayout.Width(110), GUILayout.Height(22));
+            GUILayout.Label($"Current pack: /");
+            GUILayout.EndHorizontal();
+
+            GUILayout.Space(2);
+
+            GUILayout.EndVertical();
+
+            GUI.enabled = true;
+
+            if (openSongsPath)
+                Process.Start(Main.SongsDirectory);
         }
 
         internal static void Show()
@@ -71,7 +117,7 @@ namespace AdofaiCSL.Interface
             // Select
             GUILayout.BeginHorizontal();
             GUI.enabled = true;
-            bool selectAllHere = GUILayout.Button("Select all tiles here", GUILayout.Width(140), GUILayout.Height(22));
+            bool selectAllHere = GUILayout.Button("Select all here", GUILayout.Width(140), GUILayout.Height(22));
             bool selectLevelsHere = GUILayout.Button("Select levels here", GUILayout.Width(140), GUILayout.Height(22));
             bool selectPacksHere = GUILayout.Button("Select packs here", GUILayout.Width(140), GUILayout.Height(22));
             GUILayout.EndHorizontal();
@@ -83,20 +129,20 @@ namespace AdofaiCSL.Interface
             GUI.enabled = isOnTile;
             bool selectTile = GUILayout.Button(isOnTile && selectedKeys.Contains(screen.levelToSelect) ? "Deselect" : "Select", GUILayout.Width(110), GUILayout.Height(22));
             GUI.enabled = isOnTile && screen.loadedLevels[screen.levelToSelect].isFolder;
-            bool editTile = GUILayout.Button("Edit pack", GUILayout.Width(110), GUILayout.Height(22));
+            bool editTile = GUILayout.Button("Edit pack info", GUILayout.Width(110), GUILayout.Height(22));
             GUI.enabled = true;
             bool openTilePath = GUILayout.Button("Open directory", GUILayout.Width(110), GUILayout.Height(22));
-            GUILayout.Label($"Current tile: {Regex.Replace((isOnTile ? screen.loadedLevelTiles[screen.levelToSelect].title.text.Replace('\n', ' ') : "/"), CustomLevelTileExtensions.NoTagsRegex, string.Empty)}");
+            GUILayout.Label($"Current tile: {(isOnTile ? Regex.Replace(screen.loadedLevelTiles[screen.levelToSelect].title.text.Replace('\n', ' '), CustomLevelTileExtensions.NoTagsRegex, string.Empty) : "/")}");
             GUILayout.EndHorizontal();
 
             // Current pack
             GUILayout.BeginHorizontal();
             GUI.enabled = isInPack;
             bool selectPack = GUILayout.Button(isInPack && selectedKeys.Contains(screen.currentFolderName) ? "Deselect" : "Select", GUILayout.Width(110), GUILayout.Height(22));
-            bool editPack = GUILayout.Button("Edit pack", GUILayout.Width(110), GUILayout.Height(22));
+            bool editPack = GUILayout.Button("Edit pack info", GUILayout.Width(110), GUILayout.Height(22));
             GUI.enabled = true;
             bool openPackPath = GUILayout.Button("Open directory", GUILayout.Width(110), GUILayout.Height(22));
-            GUILayout.Label($"Current pack: {Regex.Replace((isInPack ? screen.loadedLevelTiles[screen.currentFolderName].title.text.Replace('\n', ' ') : "/"), CustomLevelTileExtensions.NoTagsRegex, string.Empty)}");
+            GUILayout.Label($"Current pack: {(isInPack ? Regex.Replace(screen.loadedLevelTiles[screen.currentFolderName].title.text.Replace('\n', ' '), CustomLevelTileExtensions.NoTagsRegex, string.Empty) : "/")}");
             GUILayout.EndHorizontal();
 
             GUILayout.Space(2);
@@ -147,28 +193,6 @@ namespace AdofaiCSL.Interface
                 CurrentTileTracker.TileKey = isInPack ? Path.Combine(screen.currentFolderName, newPackName) : $"Custom:{newPackName}";
                 DOVirtual.DelayedCall(0f, () => screen.Refresh());
             }
-            
-            /*
-            if (newPackInTile)
-            {
-                string newPackPath = Path.Combine(screen.loadedLevelDirs[screen.levelToSelect], "Pack").GetUniqueDirectoryPath();
-                string newPackName = newPackPath.Split(Path.DirectorySeparatorChar).Last();
-                newPackPath.CreatePack();
-                CurrentTileTracker.TileKey = Path.Combine(screen.levelToSelect, newPackName);
-                DOVirtual.DelayedCall(0f, () => screen.Refresh());
-            }
-
-            if (newPackOut)
-            {
-                string[] packSplitPath = screen.loadedLevelDirs[screen.currentFolderName].Split(Path.DirectorySeparatorChar);
-                string[] packSplitKey = screen.currentFolderName.Split(Path.DirectorySeparatorChar);
-                string newPackPath = Path.Combine(string.Join(Path.DirectorySeparatorChar.ToString(), packSplitPath.Take(packSplitPath.Length - 2)), "Pack").GetUniqueDirectoryPath();
-                string newPackName = newPackPath.Split(Path.DirectorySeparatorChar).Last();
-                newPackPath.CreatePack();
-                CurrentTileTracker.TileKey = Path.Combine($"Custom:{string.Join(Path.DirectorySeparatorChar.ToString(), packSplitKey.Take(packSplitKey.Length - 2))}", newPackName);
-                DOVirtual.DelayedCall(0f, () => screen.Refresh());
-            }
-            */
 
             if (selectAllHere)
                 screen.loadedLevels.Where(loadedLevel => !selectedKeys.Contains(loadedLevel.Key) && screen.IsKeySearched(loadedLevel.Key))
@@ -199,20 +223,20 @@ namespace AdofaiCSL.Interface
         {
             bool isOnPack = false;
             isOnPack = isOnTile && screen.loadedLevels[screen.levelToSelect].isFolder;
-            
+
             IEnumerable<string> workshopKeys = selectedKeys.ToList().Where(screen.IsKeyWorkshop);
             IEnumerable<string> customKeys = selectedKeys.ToList().Where(key => !screen.IsKeyWorkshop(key));
             bool containsWorkshop = workshopKeys.Count() > 0;
             bool onlyWorkshop = containsWorkshop && customKeys.Count() == 0;
-            
+
             GUILayout.Space(6);
             GUILayout.Label("Selector", Styles.Header);
             GUILayout.Space(1);
             GUILayout.Label($"Selected: {string.Join(", ", selectedKeys.Select(key => Regex.Replace(screen.loadedLevelTiles[key].title.text.Replace('\n', ' '), CustomLevelTileExtensions.NoTagsRegex, string.Empty)))}");
-            
+
             GUILayout.BeginHorizontal();
 
-            GUI.enabled = isOnTile && !onlyWorkshop; 
+            GUI.enabled = isOnTile && !onlyWorkshop;
             bool moveHere = GUILayout.Button("Move here", GUILayout.Width(150), GUILayout.Height(22));
 
             GUI.enabled = isOnPack && !onlyWorkshop;
@@ -234,7 +258,7 @@ namespace AdofaiCSL.Interface
             GUILayout.EndHorizontal();
 
             if (containsWorkshop)
-                GUILayout.Label("You have workshop levels selected, you need to convert them in order to move them.", Styles.Warning);
+                GUILayout.Label("Warning: you cannot move workshop levels", Styles.Warning);
 
             if (convertCSL)
             {
@@ -271,8 +295,8 @@ namespace AdofaiCSL.Interface
 
                 string basePath = isInPack ? Path.Combine(Main.SongsDirectory, screen.currentFolderName.Replace("Custom:", string.Empty)) : Main.SongsDirectory;
 
-                foreach (string key in customKeys) {
-
+                foreach (string key in customKeys)
+                {
                     string tileName = key.Replace("Custom:", string.Empty).Split(Path.DirectorySeparatorChar).Last();
                     string newPath = Path.Combine(basePath, tileName);
                     string oldPath = screen.loadedLevelDirs[key];

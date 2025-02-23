@@ -68,22 +68,21 @@
     <Compile Include="Interface\Interface.cs" />
     <Compile Include="Interface\Styles.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Patches\CustomSongs.cs" />
+    <Compile Include="Patches\CustomSongsFloors.cs" />
     <Compile Include="API\Features\CustomConfig.cs" />
-    <Compile Include="Patches\LockNonEmptyPack.cs" />
-    <Compile Include="Patches\LockEmptyFolder.cs" />
+    <Compile Include="Patches\DisableDeleteNonEmptyPack.cs" />
+    <Compile Include="Patches\DisableEnterEmptyPack.cs" />
     <Compile Include="Patches\CustomFolderExit.cs" />
     <Compile Include="Patches\CurrentTileTracker.cs" />
     <Compile Include="Patches\CustomRefresh.cs" />
     <Compile Include="Patches\EntranceTileFix.cs" />
     <Compile Include="Patches\NullChecks.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="info.json" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command='copy /Y "$(ProjectDir)info.json" "$(OutDir)"' />
+    <Exec Command="copy /Y &quot;$(ProjectDir)info.json&quot; &quot;$(OutDir)&quot;" />
   </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

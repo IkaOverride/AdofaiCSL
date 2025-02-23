@@ -2,7 +2,7 @@
 	"Id": "AdofaiCSL",
 	"Author": "@ika7533 (originally by @thijnmens)",
 	"DisplayName": "AdofaiCSL",
-	"Version": "3.0.0",
+	"Version": "3.1.0",
 	"EntryMethod": "AdofaiCSL.Main.Load",
 	"LoadAfter":  [ "BetterCLS" ],
 	"Repository": "https://bot.adofai.gg/api/mods/AdofaiCSL/Repository.json"

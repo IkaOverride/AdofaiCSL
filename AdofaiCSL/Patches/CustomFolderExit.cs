@@ -9,7 +9,7 @@ namespace AdofaiCSL.Patches
     internal static class CustomFolderExit
     {
         /// <summary>
-        /// Exit folder for subfolders / nested folders and refresh to fix icons after exiting a level.
+        /// Add subfolder exit and force refresh after exiting a level to fix icons.
         /// </summary>
         private static bool Prefix(scnCLS __instance)
         {

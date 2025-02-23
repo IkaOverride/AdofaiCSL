@@ -86,7 +86,7 @@ namespace AdofaiCSL.API.Features
                     packConfig.TryGetValue("description", out string description) ? description.Trim() : "",
                     packConfig.ContainsKey("image") ? packConfig["image"].Trim() : "",
                     packConfig.ContainsKey("icon") ? packConfig["icon"].Trim() : "",
-                    packConfig.ContainsKey("color") ? packConfig["color"].Trim().HexToColor() : default
+                    packConfig.ContainsKey("color") ? packConfig["color"].Trim().Replace("#", "").HexToColor() : default
                 );
         }
 

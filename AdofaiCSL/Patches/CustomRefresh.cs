@@ -2,7 +2,6 @@
 using HarmonyLib;
 using Steamworks;
 using System.Linq;
-using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace AdofaiCSL.Patches

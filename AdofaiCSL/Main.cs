@@ -6,7 +6,8 @@ using static UnityModManagerNet.UnityModManager;
 
 namespace AdofaiCSL
 {
-    public class Main {
+    public class Main
+    {
         /// <summary>
         /// The path to the custom songs.
         /// </summary>
@@ -26,13 +27,13 @@ namespace AdofaiCSL
         /// Entry point for AdofaiCSL.
         /// </summary>
         /// <param name="modEntry">The mod entry.</param>
-        private static void Load(ModEntry modEntry) 
+        private static void Load(ModEntry modEntry)
         {
             ModEntry = modEntry;
 
             HarmonyInstance = new Harmony("adofaicsl");
 
-            if (!Directory.Exists(SongsDirectory)) 
+            if (!Directory.Exists(SongsDirectory))
             {
                 modEntry.Logger.Log($"Creating directory: '{SongsDirectory}'");
                 Directory.CreateDirectory(SongsDirectory);
@@ -40,16 +41,33 @@ namespace AdofaiCSL
 
             BetterCLSLoader.Init();
 
+            Enable();
+        }
+
+        /// <summary>
+        /// Enable AdofaiCSL
+        /// </summary>
+        public static void Enable()
+        {
             if (BetterCLSLoader.IsBetterCLS)
                 HarmonyInstance.Patch(
-                    AccessTools.Method(BetterCLSLoader.BetterCLSUnity.GetType("BetterCLSUnity.SongListController"), "LoadCustomFiles"), // Method to patch
-                    postfix: new HarmonyMethod(typeof(BetterCLSLoader).GetMethod(nameof(BetterCLSLoader.LoadCustomFiles))) // Postfix
+                    AccessTools.Method(BetterCLSLoader.BetterCLSUnity.GetType("BetterCLSUnity.SongListController"), "LoadCustomFiles"),
+                    postfix: new HarmonyMethod(typeof(BetterCLSLoader).GetMethod(nameof(BetterCLSLoader.LoadCustomFiles)))
                 );
 
             else
                 HarmonyInstance.PatchAll();
 
-            modEntry.OnGUI += Interface.Interface.Check;
+            ModEntry.OnGUI += Interface.Interface.Check;
+        }
+
+        /// <summary>
+        /// Disable AdofaiCSL
+        /// </summary>
+        public static void Disable()
+        {
+            ModEntry.OnGUI -= Interface.Interface.Check;
+            HarmonyInstance.UnpatchAll("adofaicsl");
         }
     }
 }
