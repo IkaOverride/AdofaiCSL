@@ -80,14 +80,14 @@ namespace AdofaiCSL.Interface
             GUILayout.Button("Select", GUILayout.Width(110), GUILayout.Height(22));
             GUILayout.Button("Edit pack info", GUILayout.Width(110), GUILayout.Height(22));
             GUILayout.Button("Open directory", GUILayout.Width(110), GUILayout.Height(22));
-            GUILayout.Label($"Current tile: /");
+            GUILayout.Label($"On tile: /");
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Button("Select", GUILayout.Width(110), GUILayout.Height(22));
             GUILayout.Button("Edit pack info", GUILayout.Width(110), GUILayout.Height(22));
             GUILayout.Button("Open directory", GUILayout.Width(110), GUILayout.Height(22));
-            GUILayout.Label($"Current pack: /");
+            GUILayout.Label($"In pack: /");
             GUILayout.EndHorizontal();
 
             GUILayout.Space(2);
@@ -132,7 +132,7 @@ namespace AdofaiCSL.Interface
             bool editTile = GUILayout.Button("Edit pack info", GUILayout.Width(110), GUILayout.Height(22));
             GUI.enabled = true;
             bool openTilePath = GUILayout.Button("Open directory", GUILayout.Width(110), GUILayout.Height(22));
-            GUILayout.Label($"Current tile: {(isOnTile ? Regex.Replace(screen.loadedLevelTiles[screen.levelToSelect].title.text.Replace('\n', ' '), CustomLevelTileExtensions.NoTagsRegex, string.Empty) : "/")}");
+            GUILayout.Label($"On tile: {(isOnTile ? Regex.Replace(screen.loadedLevelTiles[screen.levelToSelect].title.text.Replace('\n', ' '), CustomLevelTileExtensions.NoTagsRegex, string.Empty) : "/")}");
             GUILayout.EndHorizontal();
 
             // Current pack
@@ -142,7 +142,7 @@ namespace AdofaiCSL.Interface
             bool editPack = GUILayout.Button("Edit pack info", GUILayout.Width(110), GUILayout.Height(22));
             GUI.enabled = true;
             bool openPackPath = GUILayout.Button("Open directory", GUILayout.Width(110), GUILayout.Height(22));
-            GUILayout.Label($"Current pack: {(isInPack ? Regex.Replace(screen.loadedLevelTiles[screen.currentFolderName].title.text.Replace('\n', ' '), CustomLevelTileExtensions.NoTagsRegex, string.Empty) : "/")}");
+            GUILayout.Label($"In pack: {(isInPack ? Regex.Replace(screen.loadedLevelTiles[screen.currentFolderName].title.text.Replace('\n', ' '), CustomLevelTileExtensions.NoTagsRegex, string.Empty) : "/")}");
             GUILayout.EndHorizontal();
 
             GUILayout.Space(2);
